@@ -1,16 +1,16 @@
 name: 'AWS S3 bucket sync'
 
 inputs:
-  aws-access-key-id:
+  access-key-id:
     description: 'The AWS access key ID'
     required: true
-  aws-secret-access-key:
+  secret-access-key:
     description: 'The AWS secret access key'
     required: true
-  aws-region:
+  region:
     description: 'The AWS region'
     required: true
-  aws-s3-bucket-name:
+  s3-bucket-name:
     description: 'The S3 bucket name'
   folder:
     description: 'The folder that should be synced'
@@ -23,9 +23,9 @@ runs:
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
-        aws-access-key-id: ${{ inputs.aws-access-key-id }}
-        aws-secret-access-key: ${{ inputs.aws-secret-access-key }}
-        aws-region: ${{ inputs.aws-region }}
+        aws-access-key-id: ${{ inputs.access-key-id }}
+        aws-secret-access-key: ${{ inputs.secret-access-key }}
+        aws-region: ${{ inputs.region }}
     - name: Sync files to S3 bucket
-      run: aws s3 sync --delete ${{ inputs.folder }} s3://${{ inputs.aws-s3-bucket-name }}
+      run: aws s3 sync --delete ${{ inputs.folder }} s3://${{ inputs.s3-bucket-name }}
       shell: bash

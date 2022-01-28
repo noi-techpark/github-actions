@@ -1,0 +1,41 @@
+name: 'Node - install and test code'
+
+inputs:
+  node-version:
+    description: 'The Node version that should be used for the build'
+    required: true
+    default: '16.x'
+  test-enabled:
+    description: 'Enable test step'
+    default: true
+  lint-enabled:
+    description: 'Enable lint step'
+    default: true
+  test-command:
+    description: 'The test command'
+    required: true
+    default: 'npm run build'
+  lint-command:
+    description: 'The lint command'
+    required: true
+    default: 'npm run lint'
+  
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Node
+      uses: actions/setup-node@v2
+      with:
+        node-version: ${{ inputs.node-version }}
+        cache: npm
+    - name: Install dependencies
+      run: npm ci
+      shell: bash
+    - name: Lint code
+      if: ${{ inputs.lint-enabled }}
+      run: ${{ inputs.lint-command }}
+      shell: bash
+    - name: Test code
+      if: ${{ inputs.test-enabled }}
+      run: ${{ inputs.test-command }}
+      shell: bash
