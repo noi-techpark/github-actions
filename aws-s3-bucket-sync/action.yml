@@ -1,6 +1,9 @@
 name: 'AWS S3 bucket sync'
 
 inputs:
+  working-directory:
+    description: 'The working directory'
+    required: false
   access-key-id:
     description: 'The AWS access key ID'
     required: true
@@ -28,4 +31,5 @@ runs:
         aws-region: ${{ inputs.region }}
     - name: Sync files to S3 bucket
       run: aws s3 sync --delete ${{ inputs.folder }} s3://${{ inputs.s3-bucket-name }}
+      working-directory: ${{ inputs.working-directory }}
       shell: bash
