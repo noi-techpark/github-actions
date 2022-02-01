@@ -4,6 +4,7 @@ inputs:
   working-directory:
     description: 'The working directory'
     required: false
+    default: '.'
   access-key-id:
     description: 'The AWS access key ID'
     required: true
