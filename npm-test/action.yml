@@ -1,4 +1,4 @@
-name: 'Node - install and test code'
+name: 'Node / NPM - install and test code'
 
 inputs:
   working-directory:
@@ -18,7 +18,7 @@ inputs:
   test-command:
     description: 'The test command'
     required: true
-    default: 'npm run build'
+    default: 'npm run test'
   lint-command:
     description: 'The lint command'
     required: true

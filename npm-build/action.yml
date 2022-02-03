@@ -1,4 +1,4 @@
-name: 'Node - install and build code'
+name: 'Node / NPM - install and build code'
 
 inputs:
   working-directory:
