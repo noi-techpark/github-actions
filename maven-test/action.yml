@@ -27,7 +27,7 @@ runs:
         distribution: 'adopt'
         cache: 'maven'
     - name: Test code
-      if: ${{ inputs.test-enabled }}
+      if: ${{ inputs.test-enabled == 'true' }}
       working-directory: ${{ inputs.working-directory }}
       run: ${{ inputs.test-command }}
       shell: bash
