@@ -44,7 +44,7 @@ runs:
       shell: bash
     - name: Test code
       working-directory: ${{ inputs.working-directory }}
-      run: echo "${{ inputs.test-command }}"
+      run: echo "${{ inputs.test-enabled }}"
       shell: bash
     - name: Test code
       if: ${{ inputs.test-enabled }}
