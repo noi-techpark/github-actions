@@ -11,7 +11,8 @@ inputs:
     default: '11'
   test-enabled:
     description: 'Enable test step'
-    default: true
+    required: false
+    default: 'true'
   test-command:
     description: 'The test command'
     required: true
@@ -23,7 +24,7 @@ runs:
     - name: Set up Java
       uses: actions/setup-java@v2
       with:
-        java-version: '11'
+        java-version: ${{ inputs.java-version }}
         distribution: 'adopt'
         cache: 'maven'
     - name: Test code
