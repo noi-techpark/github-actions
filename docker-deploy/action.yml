@@ -1,0 +1,53 @@
+name: 'Docker deployment'
+
+inputs:
+  working-directory:
+    description: 'The working directory'
+    required: false
+    default: 'infrastructure/ansible'
+  playbook-file:
+    description: 'The Ansible playbook filename'
+    required: true
+    default: 'deploy.yml'
+  requirements-file:
+    description: 'The Ansible requirements filename'
+    required: true
+    default: 'requirements.yml'
+  hosts:
+    description: 'The hosts where the deployment should be applied'
+    required: true
+  ssh-private-key:
+    description: 'The SSH private key'
+    required: true
+  docker-host:
+    description: 'The Docker host'
+    required: true
+    default: 'docker.pkg.github.com'
+  docker-username:
+    description: 'The Docker username'
+    required: true
+  docker-password:
+    description: 'The Docker password'
+    required: true
+  project-name:
+    description: 'The project name'
+    required: true
+  
+runs:
+  using: "composite"
+  steps:
+    - name: Generate release name
+      run: echo "RELEASE_NAME=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
+      shell: bash
+    - name: Setup SSH connection
+      run: |
+        ssh-agent -a /tmp/ssh_agent.sock > /dev/null
+        ssh-add - <<< "${{ inputs.ssh-private-key }}"
+    - name: Install Ansible requirements
+      working-directory: ${{ inputs.working-directory }}
+      run: ansible-galaxy install -f -r ${{ inputs.requirements-file }}
+      shell: bash
+    - name: Deploy application
+      working-directory: ${{ inputs.working-directory }}
+      run: ansible-playbook --limit=${{ inputs.hosts }} ${{ inputs.playbook-file }} --extra-vars "project_name=${{ inputs.project-name }}" --extra-vars "release_name=${{ env.RELEASE_NAME }}" --extra-vars "docker_host=${{ inputs.docker-host }}" --extra-vars "docker_username=${{ inputs.docker-username }}" --extra-vars "docker_password=${{ inputs.docker-password }}"
+      shell: bash

@@ -31,6 +31,6 @@ runs:
         aws-secret-access-key: ${{ inputs.secret-access-key }}
         aws-region: ${{ inputs.region }}
     - name: Sync files to S3 bucket
-      run: aws s3 sync --delete ${{ inputs.folder }} s3://${{ inputs.s3-bucket-name }}
       working-directory: ${{ inputs.working-directory }}
+      run: aws s3 sync --delete ${{ inputs.folder }} s3://${{ inputs.s3-bucket-name }}
       shell: bash
