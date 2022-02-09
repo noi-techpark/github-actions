@@ -43,6 +43,7 @@ runs:
       run: |
         ssh-agent -a /tmp/ssh_agent.sock > /dev/null
         ssh-add - <<< "${{ inputs.ssh-private-key }}"
+      shell: bash
     - name: Install Ansible requirements
       working-directory: ${{ inputs.working-directory }}
       run: ansible-galaxy install -f -r ${{ inputs.requirements-file }}
