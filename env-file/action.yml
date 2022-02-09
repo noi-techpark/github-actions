@@ -1,0 +1,21 @@
+name: '.env file creation including attachment of environment keys starting with X_'
+
+inputs:
+  working-directory:
+    description: 'The working directory'
+    required: false
+    default: '.'
+  source-file:
+    description: 'The source file that should be copied and used as starting point - if not set, a new file will be created'
+  destination-file:
+    description: 'The destination file'
+    required: true
+    default: '.env'
+  environment-variable-prefix:
+    description: 'The prefix of the environment variables'
+    required: true
+    default: 'X_'
+  
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
