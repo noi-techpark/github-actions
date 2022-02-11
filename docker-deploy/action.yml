@@ -39,10 +39,11 @@ runs:
     - name: Generate release name
       run: echo "RELEASE_NAME=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
       shell: bash
+    - name: Start SSH agent
+      run: ssh-agent -a /tmp/ssh_agent.sock > /dev/null
+      shell: bash
     - name: Setup SSH connection
-      run: |
-        ssh-agent -a /tmp/ssh_agent.sock > /dev/null
-        ssh-add - <<< "${{ inputs.ssh-private-key }}"
+      run: ssh-add - <<< "${{ inputs.ssh-private-key }}"
       shell: bash
     - name: Install Ansible requirements
       working-directory: ${{ inputs.working-directory }}
