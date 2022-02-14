@@ -4,7 +4,7 @@ set -eo pipefail
 
 RELEASE_NAME=$(date +'%Y-%m-%dT%H:%M:%S')
 
-ssh-agent -a /tmp/ssh_agent.sock > /dev/null
+eval `ssh-agent -s`
 ssh-add - <<< "$INPUT_SSH_PRIVATE_KEY"
 
 cd $INPUT_WORKING_DIRECTORY
