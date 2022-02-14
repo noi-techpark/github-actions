@@ -1,5 +1,5 @@
 #!/bin/sh
 
-set -eo pipefail
+set -euxo pipefail
 
 python3 /main.py
