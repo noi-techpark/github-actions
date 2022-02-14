@@ -32,24 +32,7 @@ inputs:
   project-name:
     description: 'The project name'
     required: true
-  
+
 runs:
-  using: "composite"
-  steps:
-    - name: Generate release name
-      run: echo "RELEASE_NAME=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
-      shell: bash
-    - name: Start SSH agent
-      run: ssh-agent -a /tmp/ssh_agent.sock > /dev/null
-      shell: bash
-    - name: Setup SSH connection
-      run: ssh-add - <<< "${{ inputs.ssh-private-key }}"
-      shell: bash
-    - name: Install Ansible requirements
-      working-directory: ${{ inputs.working-directory }}
-      run: ansible-galaxy install -f -r ${{ inputs.requirements-file }}
-      shell: bash
-    - name: Deploy application
-      working-directory: ${{ inputs.working-directory }}
-      run: ansible-playbook --limit=${{ inputs.hosts }} ${{ inputs.playbook-file }} --extra-vars "project_name=${{ inputs.project-name }}" --extra-vars "release_name=${{ env.RELEASE_NAME }}" --extra-vars "docker_host=${{ inputs.docker-host }}" --extra-vars "docker_username=${{ inputs.docker-username }}" --extra-vars "docker_password=${{ inputs.docker-password }}"
-      shell: bash
+  using: 'docker'
+  image: 'Dockerfile'

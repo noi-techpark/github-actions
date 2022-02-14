@@ -1,3 +1,5 @@
-#!/bin/sh -l
+#!/bin/sh
+
+set -eu
 
 python3 /main.py
