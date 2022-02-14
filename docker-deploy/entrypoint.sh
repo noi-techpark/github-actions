@@ -14,7 +14,7 @@ INPUT_DOCKER_USERNAME="$(env | sed -n 's/^INPUT_DOCKER-USERNAME=\(.*\)/\1/p')"
 INPUT_DOCKER_PASSWORD="$(env | sed -n 's/^INPUT_DOCKER-PASSWORD=\(.*\)/\1/p')"
 
 eval `ssh-agent -s`
-ssh-add - <<< "${INPUT_SSH_PRIVATE_KEY}"
+ssh-add - <<< ${INPUT_SSH_PRIVATE_KEY}
 
 cd "${INPUT_WORKING_DIRECTORY}"
 ansible-galaxy install -f -r "${INPUT_REQUIREMENTS_FILE}"
