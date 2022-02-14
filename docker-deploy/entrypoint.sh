@@ -4,6 +4,8 @@ set -euxo pipefail
 
 RELEASE_NAME=$(date +'%Y-%m-%dT%H:%M:%S')
 
+cd "${INPUT_WORKING-DIRECTORY}"
+
 eval `ssh-agent -s`
 ssh-add - <<< "${INPUT_SSH-PRIVATE-KEY}"
 
