@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -eu
+set -eo pipefail
 
 RELEASE_NAME=$(date +'%Y-%m-%dT%H:%M:%S')
 
