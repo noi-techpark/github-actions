@@ -38,7 +38,7 @@ runs:
   steps:
     - name: Setup SSH connection
       run: |
-        ssh-agent -a $SSH_AUTH_SOCK > /dev/null
+        ssh-agent -a /tmp/ssh_agent.sock > /dev/null
         ssh-add - <<< "${{ inputs.ssh-private-key }}"
       shell: bash
     - name: Install Ansible requirements
