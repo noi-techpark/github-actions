@@ -37,7 +37,7 @@ runs:
   using: "composite"
   steps:
     - name: Start SSH agent
-      run: ssh-agent -a /tmp/ssh_agent.sock > /dev/null
+      run: eval `ssh-agent -s`
       shell: bash
     - name: Setup SSH connection
       run: ssh-add - <<< "${{ inputs.ssh-private-key }}"
