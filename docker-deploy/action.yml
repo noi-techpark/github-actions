@@ -36,11 +36,10 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Start SSH agent
-      run: eval `ssh-agent -s`
-      shell: bash
     - name: Setup SSH connection
-      run: ssh-add - <<< "${{ inputs.ssh-private-key }}"
+      run: |
+        ssh-agent -a $SSH_AUTH_SOCK > /dev/null
+        ssh-add - <<< "${{ inputs.ssh-private-key }}"
       shell: bash
     - name: Install Ansible requirements
       working-directory: ${{ inputs.working-directory }}
