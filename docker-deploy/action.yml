@@ -36,6 +36,9 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - name: Generate release name
+      run: echo "RELEASE_NAME=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
+      shell: bash
     - name: Setup SSH connection
       env:
         SSH_AUTH_SOCK: /tmp/ssh_agent.sock
