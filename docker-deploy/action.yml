@@ -37,15 +37,21 @@ runs:
   using: "composite"
   steps:
     - name: Setup SSH connection
+      env:
+        SSH_AUTH_SOCK: /tmp/ssh_agent.sock
       run: |
-        ssh-agent -a /tmp/ssh_agent.sock > /dev/null
+        ssh-agent -a $SSH_AUTH_SOCK > /dev/null
         ssh-add - <<< "${{ inputs.ssh-private-key }}"
       shell: bash
     - name: Install Ansible requirements
+      env:
+        SSH_AUTH_SOCK: /tmp/ssh_agent.sock
       working-directory: ${{ inputs.working-directory }}
       run: ansible-galaxy install -f -r ${{ inputs.requirements-file }}
       shell: bash
     - name: Deploy application
+      env:
+        SSH_AUTH_SOCK: /tmp/ssh_agent.sock
       working-directory: ${{ inputs.working-directory }}
       run: ansible-playbook --limit=${{ inputs.hosts }} ${{ inputs.playbook-file }} --extra-vars "project_name=${{ inputs.project-name }}" --extra-vars "release_name=${{ env.RELEASE_NAME }}" --extra-vars "docker_host=${{ inputs.docker-host }}" --extra-vars "docker_username=${{ inputs.docker-username }}" --extra-vars "docker_password=${{ inputs.docker-password }}"
       shell: bash
