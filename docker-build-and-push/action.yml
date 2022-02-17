@@ -31,9 +31,9 @@ runs:
         password: ${{ inputs.docker-password }}
     - name: Build container images
       working-directory: ${{ inputs.working-directory }}
-      run: docker-compose --no-ansi -f ${{ inputs.docker-compose-file }} build --pull
+      run: docker-compose --ansi never -f ${{ inputs.docker-compose-file }} build --pull
       shell: bash
     - name: Push container images
       working-directory: ${{ inputs.working-directory }}
-      run: docker-compose --no-ansi -f ${{ inputs.docker-compose-file }} push
+      run: docker-compose --ansi never -f ${{ inputs.docker-compose-file }} push
       shell: bash

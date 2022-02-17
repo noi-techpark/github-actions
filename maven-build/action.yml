@@ -1,0 +1,29 @@
+name: 'Java / Maven - install and build code'
+
+inputs:
+  working-directory:
+    description: 'The working directory'
+    required: false
+    default: '.'
+  java-version:
+    description: 'The Java version that should be used for the build'
+    required: true
+    default: '11'
+  build-command:
+    description: 'The build command'
+    required: true
+    default: './mvnw package'
+  
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Java
+      uses: actions/setup-java@v2
+      with:
+        java-version: ${{ inputs.java-version }}
+        distribution: 'adopt'
+        cache: 'maven'
+    - name: Build project
+      working-directory: ${{ inputs.working-directory }}
+      run: ${{ inputs.build-command }}
+      shell: bash
