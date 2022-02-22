@@ -8,7 +8,7 @@ output = ""
 
 for key in env_keys:
     if key.startswith(prefix):
-        output += key.split(prefix)[1] + "=" + os.environ.get(key) + "\n"
+        output += key.split(prefix, 1)[1] + "=" + os.environ.get(key) + "\n"
 
 directory = os.environ.get("INPUT_WORKING_DIRECTORY", ".")
 source_file = os.environ.get("INPUT_SOURCE_FILE")
