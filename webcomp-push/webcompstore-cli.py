@@ -10,12 +10,12 @@ from keycloak import KeycloakOpenID
 VERSION = 0.1
 
 
-API_URL_DEV = os.environ.get("API_URL_DEV")
-API_URL_PROD = os.environ.get("API_URL_PROD")
-KEYCLOAK_URL = os.environ.get("KEYCLOAK_URL")
-KEYCLOAK_REALM = os.environ.get("KEYCLOAK_REALM")
-KEYCLOAK_CLIENT_ID = os.environ.get("KEYCLOAK_CLIENT_ID")
-KEYCLOAK_CLIENT_SECRET = os.environ.get("KEYCLOAK_CLIENT_SECRET")
+API_URL_DEV = os.getenv("API_URL_DEV")
+API_URL_PROD = os.getenv("API_URL_PROD")
+KEYCLOAK_URL = os.getenv("KEYCLOAK_URL")
+KEYCLOAK_REALM = os.getenv("KEYCLOAK_REALM")
+KEYCLOAK_CLIENT_ID = os.getenv("KEYCLOAK_CLIENT_ID")
+KEYCLOAK_CLIENT_SECRET = os.getenv("KEYCLOAK_CLIENT_SECRET")
 
 api_url = API_URL_DEV
 
