@@ -4,19 +4,18 @@ import json
 import base64
 from datetime import datetime
 import copy
-from dotenv import dotenv_values
+import os
 from keycloak import KeycloakOpenID
 
 VERSION = 0.1
 
-env = dotenv_values(".env")
 
-API_URL_DEV = env["API_URL_DEV"]
-API_URL_PROD = env["API_URL_PROD"]
-KEYCLOAK_URL = env["KEYCLOAK_URL"]
-KEYCLOAK_REALM = env["KEYCLOAK_REALM"]
-KEYCLOAK_CLIENT_ID = env["KEYCLOAK_CLIENT_ID"]
-KEYCLOAK_CLIENT_SECRET = env["KEYCLOAK_CLIENT_SECRET"]
+API_URL_DEV = os.environ.get("API_URL_DEV")
+API_URL_PROD = os.environ.get("API_URL_PROD")
+KEYCLOAK_URL = os.environ.get("KEYCLOAK_URL")
+KEYCLOAK_REALM = os.environ.get("KEYCLOAK_REALM")
+KEYCLOAK_CLIENT_ID = os.environ.get("KEYCLOAK_CLIENT_ID")
+KEYCLOAK_CLIENT_SECRET = os.environ.get("KEYCLOAK_CLIENT_SECRET")
 
 api_url = API_URL_DEV
 
