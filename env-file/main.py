@@ -18,6 +18,11 @@ directory_str = str(directory)
 source_file_str = str(source_file)
 destination_file_str = str(destination_file)
 
+print(directory)
+print(directory_str)
+print(source_file_str)
+print(destination_file_str)
+
 if source_file is not None:
     shutil.copyfile(os.path.join(directory_str, source_file_str), os.path.join(directory_str, destination_file_str))
 
