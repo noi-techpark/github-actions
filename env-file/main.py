@@ -18,7 +18,7 @@ directory_str = str(directory)
 source_file_str = str(source_file)
 destination_file_str = str(destination_file)
 
-if source_file is not None:
+if source_file is not None and bool(source_file_str.strip()):
     shutil.copyfile(os.path.join(directory_str, source_file_str), os.path.join(directory_str, destination_file_str))
 
 with open(os.path.join(directory_str, destination_file_str), "a") as text_file:
