@@ -17,20 +17,28 @@ VERSION = 0.1
 # KEYCLOAK_CLIENT_ID = os.getenv("KEYCLOAK_CLIENT_ID")
 # KEYCLOAK_CLIENT_SECRET = os.getenv("KEYCLOAK_CLIENT_SECRET")
 
-API_URL_DEV = "https://api.webcomponents.opendatahub.testingmachine.eu/"
-API_URL_PROD = "https://api.webcomponents.opendatahub.bz.it/"
+API_URL_TEST = os.getenv("API_URL_TEST")
+API_URL_PROD = os.getenv("API_URL_PROD")
 
-KEYCLOAK_URL = "https://auth.opendatahub.testingmachine.eu/auth/"
-KEYCLOAK_REALM = "noi"
-KEYCLOAK_CLIENT_ID = "it.bz.opendatahub.webcomponents.cli"
+KEYCLOAK_URL_TEST = os.getenv("KEYCLOAK_URL_TEST")
+KEYCLOAK_REALM_TEST = os.getenv("KEYCLOAK_REALM_TEST")
+KEYCLOAK_CLIENT_ID_TEST = os.getenv("KEYCLOAK_CLIENT_ID_TEST")
 
-api_url = API_URL_DEV
+KEYCLOAK_URL_PROD = os.getenv("KEYCLOAK_URL_PROD")
+KEYCLOAK_REALM_PROD = os.getenv("KEYCLOAK_REALM_PROD")
+KEYCLOAK_CLIENT_ID_PROD = os.getenv("KEYCLOAK_CLIENT_ID_PROD")
+
+keycloak_url = KEYCLOAK_CLIENT_ID_TEST
+keycloak_realm = KEYCLOAK_REALM_TEST
+keycloak_client_id = KEYCLOAK_CLIENT_ID_TEST
+
+api_url = API_URL_TEST
 
 
 def get_token(secret):
-    keycloak_openid = KeycloakOpenID(server_url=KEYCLOAK_URL,
-                                     client_id=KEYCLOAK_CLIENT_ID,
-                                     realm_name=KEYCLOAK_REALM,
+    keycloak_openid = KeycloakOpenID(server_url=keycloak_url,
+                                     client_id=keycloak_realm,
+                                     realm_name=keycloak_client_id,
                                      client_secret_key=secret,
                                      verify=True)
 
@@ -204,6 +212,9 @@ if __name__ == '__main__':
 
     if(args.production):
         api_url = API_URL_PROD
+        keycloak_url = KEYCLOAK_CLIENT_ID_PROD
+        keycloak_realm = KEYCLOAK_REALM_PROD
+        keycloak_client_id = KEYCLOAK_CLIENT_ID_PROD
 
     if(args.list):
         list = get_list()
