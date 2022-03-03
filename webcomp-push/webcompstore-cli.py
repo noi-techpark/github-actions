@@ -52,6 +52,24 @@ def get_file_as_json(file_path):
         data = file.read()
     return json.loads(data)
 
+def lighthouse():
+    token = get_token()
+    url = api_url + "admin/webcomponent/refetch-lighthouse"
+    headers = {
+        "Authorization": "Bearer " + token
+    }
+    response = requests.patch(url, headers=headers)
+    print("Status Code", response.status_code)
+
+def size():
+    token = get_token()
+    url = api_url + "admin/webcomponent/recalculate-size"
+    headers = {
+        "Authorization": "Bearer " + token
+    }
+    response = requests.patch(url, headers=headers)
+    print("Status Code", response.status_code)
+
 
 def post_webcomponent(token, wcs_manifest, image):
     url = api_url + "admin/webcomponent"
@@ -238,23 +256,15 @@ if __name__ == '__main__':
             put_webcomponent_version(
                 token, webcomp["uuid"], wcs_manifest, dist_file, webcomp["currentVersion"]["versionTag"], args.push)
 
+        lighthouse()
+        size()
+
     if(args.lighthouse):
-        token = get_token()
-        url = api_url + "admin/webcomponent/refetch-lighthouse"
-        headers = {
-            "Authorization": "Bearer " + token
-        }
-        response = requests.patch(url, headers=headers)
-        print("Status Code", response.status_code)
+        lighthouse()
+
 
     if(args.size):
-        token = get_token()
-        url = api_url + "admin/webcomponent/recalculate-size"
-        headers = {
-            "Authorization": "Bearer " + token
-        }
-        response = requests.patch(url, headers=headers)
-        print("Status Code", response.status_code)
+        size()
 
     if(args.delete):
         if not args.yes:
