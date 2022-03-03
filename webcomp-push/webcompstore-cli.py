@@ -212,6 +212,7 @@ if __name__ == '__main__':
     if(args.push and args.secret):
 
         wcs_manifest = get_file_as_json("wcs-manifest.json")
+        print(json.dumps(wcs_manifest))
         image = get_file_as_base64("wcs-logo.png")
         dist_file_path = wcs_manifest["dist"]["basePath"] + \
             "/" + wcs_manifest["dist"]["files"][0]
