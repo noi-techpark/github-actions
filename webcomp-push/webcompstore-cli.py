@@ -210,7 +210,6 @@ if __name__ == '__main__':
         print(json.dumps(list, indent=4))
 
     if(args.push and args.secret):
-        token = get_token(args.secret)
 
         wcs_manifest = get_file_as_json("wcs-manifest.json")
         image = get_file_as_base64("wcs-logo.png")
@@ -219,6 +218,9 @@ if __name__ == '__main__':
         dist_file = get_file_as_base64(dist_file_path)
 
         webcomp = find_webcomp(wcs_manifest["repositoryUrl"])
+
+        token = get_token(args.secret)
+
 
         if webcomp == None:
             # post for first time
