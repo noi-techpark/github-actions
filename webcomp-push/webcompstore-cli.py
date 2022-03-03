@@ -22,7 +22,7 @@ API_URL_PROD = "https://api.webcomponents.opendatahub.bz.it/"
 
 KEYCLOAK_URL = "https://auth.opendatahub.testingmachine.eu/auth/"
 KEYCLOAK_REALM = "noi"
-KEYCLOAK_CLIENT_ID = "it.bz.opendatahub.webcomponents.api"
+KEYCLOAK_CLIENT_ID = "it.bz.opendatahub.webcomponents.cli"
 
 api_url = API_URL_DEV
 
@@ -212,7 +212,6 @@ if __name__ == '__main__':
     if(args.push and args.secret):
 
         wcs_manifest = get_file_as_json("wcs-manifest.json")
-        print(json.dumps(wcs_manifest))
         image = get_file_as_base64("wcs-logo.png")
         dist_file_path = wcs_manifest["dist"]["basePath"] + \
             "/" + wcs_manifest["dist"]["files"][0]
