@@ -9,14 +9,6 @@ from keycloak import KeycloakOpenID
 
 VERSION = 0.1
 
-
-# API_URL_DEV = os.getenv("API_URL_DEV")
-# API_URL_PROD = os.getenv("API_URL_PROD")
-# KEYCLOAK_URL = os.getenv("KEYCLOAK_URL")
-# KEYCLOAK_REALM = os.getenv("KEYCLOAK_REALM")
-# KEYCLOAK_CLIENT_ID = os.getenv("KEYCLOAK_CLIENT_ID")
-# KEYCLOAK_CLIENT_SECRET = os.getenv("KEYCLOAK_CLIENT_SECRET")
-
 API_URL_TEST = os.getenv("API_URL_TEST")
 API_URL_PROD = os.getenv("API_URL_PROD")
 
@@ -28,6 +20,11 @@ KEYCLOAK_URL_PROD = os.getenv("KEYCLOAK_URL_PROD")
 KEYCLOAK_REALM_PROD = os.getenv("KEYCLOAK_REALM_PROD")
 KEYCLOAK_CLIENT_ID_PROD = os.getenv("KEYCLOAK_CLIENT_ID_PROD")
 
+KEYCLOAK_CLIENT_SECRET = os.getenv("KEYCLOAK_CLIENT_SECRET")
+
+# use --production or set env variable PRODUCTION to true, to push to production store 
+PRODUCTION = os.getenv("PRODUCTION")
+
 keycloak_url = KEYCLOAK_CLIENT_ID_TEST
 keycloak_realm = KEYCLOAK_REALM_TEST
 keycloak_client_id = KEYCLOAK_CLIENT_ID_TEST
@@ -35,11 +32,11 @@ keycloak_client_id = KEYCLOAK_CLIENT_ID_TEST
 api_url = API_URL_TEST
 
 
-def get_token(secret):
+def get_token():
     keycloak_openid = KeycloakOpenID(server_url=keycloak_url,
-                                     client_id=keycloak_realm,
-                                     realm_name=keycloak_client_id,
-                                     client_secret_key=secret,
+                                     client_id=keycloak_client_id,
+                                     realm_name=keycloak_realm,
+                                     client_secret_key=KEYCLOAK_CLIENT_SECRET,
                                      verify=True)
 
     return keycloak_openid.token("", "", "client_credentials")["access_token"]
@@ -193,8 +190,6 @@ if __name__ == '__main__':
                         help="Push a webcomponent to the store (branch-name is only for versiontag creation).")
     parser.add_argument('--delete', metavar='UUID',
                         help="Deletes a webcomponent with the give uuid.")
-    parser.add_argument('--secret', metavar='SECRET',
-                        help="Deletes a webcomponent with the give uuid.")
     parser.add_argument(
         '--production', help="Use production URL for API: api.webcomponents.opendatahub.bz.it", action="store_true")
     parser.add_argument(
@@ -210,7 +205,7 @@ if __name__ == '__main__':
         print(f"webcompstore-cli version {VERSION}")
         exit()
 
-    if(args.production):
+    if(args.production or str(PRODUCTION).upper() == 'TRUE'):
         api_url = API_URL_PROD
         keycloak_url = KEYCLOAK_CLIENT_ID_PROD
         keycloak_realm = KEYCLOAK_REALM_PROD
@@ -220,7 +215,7 @@ if __name__ == '__main__':
         list = get_list()
         print(json.dumps(list, indent=4))
 
-    if(args.push and args.secret):
+    if(args.push):
 
         wcs_manifest = get_file_as_json("wcs-manifest.json")
         image = get_file_as_base64("wcs-logo.png")
@@ -230,7 +225,7 @@ if __name__ == '__main__':
 
         webcomp = find_webcomp(wcs_manifest["repositoryUrl"])
 
-        token = get_token(args.secret)
+        token = get_token()
 
 
         if webcomp == None:
@@ -244,7 +239,7 @@ if __name__ == '__main__':
                 token, webcomp["uuid"], wcs_manifest, dist_file, webcomp["currentVersion"]["versionTag"], args.push)
 
     if(args.lighthouse):
-        token = get_token(args.secret)
+        token = get_token()
         url = api_url + "admin/webcomponent/refetch-lighthouse"
         headers = {
             "Authorization": "Bearer " + token
@@ -253,7 +248,7 @@ if __name__ == '__main__':
         print("Status Code", response.status_code)
 
     if(args.size):
-        token = get_token(args.secret)
+        token = get_token()
         url = api_url + "admin/webcomponent/recalculate-size"
         headers = {
             "Authorization": "Bearer " + token
@@ -264,7 +259,7 @@ if __name__ == '__main__':
     if(args.delete):
         if not args.yes:
             confirm("deletion ")
-        token = get_token(args.secret)
+        token = get_token()
         url = api_url + "admin/webcomponent/" + args.delete
 
         headers = {

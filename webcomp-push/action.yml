@@ -1,4 +1,4 @@
-name: 'Builds webcomponents and pushes them to the store'
+name: 'Push webcomponents to the store'
 
 inputs:
   branch-name:
@@ -9,17 +9,15 @@ inputs:
     description: 'The keycloak client secret.'
     required: true
   production:
-    description: 'Push the webcomponent to the production store.'
+    description: 'To push to the production store, set "true"'
     required: true
-    default: false
+    default: 'false'
   
 runs:
   using: 'docker'
   image: 'Dockerfile'
   args:
-    - ${{ inputs.keycloak-secret }}
     - ${{ inputs.branch-name }}
-    - ${{ inputs.production }}
   env: 
     # TEST
     API_URL_TEST: https://api.webcomponents.opendatahub.testingmachine.eu/
@@ -32,3 +30,6 @@ runs:
     KEYCLOAK_URL_PROD: https://auth.opendatahub.bz.it/auth/
     KEYCLOAK_REALM_PROD: noi
     KEYCLOAK_CLIENT_ID_PROD: it.bz.opendatahub.webcomponents.cli
+    KEYCLOAK_CLIENT_SECRET: ${{ inputs.keycloak-secret }}
+
+    PRODUCTION: - ${{ inputs.production }}
