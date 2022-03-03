@@ -32,4 +32,4 @@ runs:
     KEYCLOAK_CLIENT_ID_PROD: it.bz.opendatahub.webcomponents.cli
     KEYCLOAK_CLIENT_SECRET: ${{ inputs.keycloak-secret }}
 
-    PRODUCTION: - ${{ inputs.production }}
+    PRODUCTION: ${{ inputs.production }}
