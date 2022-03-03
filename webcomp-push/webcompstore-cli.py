@@ -25,7 +25,7 @@ KEYCLOAK_CLIENT_SECRET = os.getenv("KEYCLOAK_CLIENT_SECRET")
 # use --production or set env variable PRODUCTION to true, to push to production store 
 PRODUCTION = os.getenv("PRODUCTION")
 
-keycloak_url = KEYCLOAK_CLIENT_ID_TEST
+keycloak_url = KEYCLOAK_URL_TEST
 keycloak_realm = KEYCLOAK_REALM_TEST
 keycloak_client_id = KEYCLOAK_CLIENT_ID_TEST
 
