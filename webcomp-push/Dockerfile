@@ -6,8 +6,6 @@ RUN wget "https://raw.githubusercontent.com/noi-techpark/it.bz.opendatahub.webco
 RUN wget "https://raw.githubusercontent.com/noi-techpark/it.bz.opendatahub.webcomponents/main/webcompstore-cli/requirements.txt"
 
 COPY entrypoint.sh /
-COPY webcompstore-cli.py /
-COPY requirements.txt /
 
 RUN pip install --no-cache-dir -r requirements.txt
 
