@@ -1,8 +1,8 @@
 name: 'Push webcomponents to the store'
 
 inputs:
-  branch-name:
-    description: 'The branch name for creating the version-tag visible in the store.'
+  version-tag:
+    description: 'The version-tag that will be visible in the store.'
     required: true
     default: 'main'
   keycloak-secret:
@@ -17,7 +17,7 @@ runs:
   using: 'docker'
   image: 'Dockerfile'
   args:
-    - ${{ inputs.branch-name }}
+    - ${{ inputs.version-tag }}
   env: 
     # TEST
     API_URL_TEST: https://api.webcomponents.opendatahub.testingmachine.eu/
