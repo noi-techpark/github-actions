@@ -1,0 +1,19 @@
+name: 'Docker build image'
+
+inputs:
+  working-directory:
+    description: 'The working directory'
+    required: false
+    default: 'infrastructure'
+  docker-compose-file:
+    description: 'The Docker Compose filename'
+    required: true
+    default: 'docker-compose.build.yml'
+  
+runs:
+  using: "composite"
+  steps:
+    - name: Build container images
+      working-directory: ${{ inputs.working-directory }}
+      run: docker-compose --ansi never -f ${{ inputs.docker-compose-file }} build --pull
+      shell: bash
