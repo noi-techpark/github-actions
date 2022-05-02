@@ -20,6 +20,10 @@ inputs:
     description: 'The folder that should be synced'
     required: true
     default: './dist'
+  exclude-path-pattern:
+    description: 'The folder-pattern that should be excluded'
+    required: false
+    default: ''
   
 runs:
   using: "composite"
@@ -32,5 +36,5 @@ runs:
         aws-region: ${{ inputs.region }}
     - name: Sync files to S3 bucket
       working-directory: ${{ inputs.working-directory }}
-      run: aws s3 sync --delete ${{ inputs.folder }} s3://${{ inputs.s3-bucket-name }}
+      run: aws s3 sync --delete ${{ inputs.folder }} s3://${{ inputs.s3-bucket-name }} --exclude "${{ inputs.exclude-path-pattern }}"
       shell: bash
