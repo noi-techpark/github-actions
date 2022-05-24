@@ -22,7 +22,7 @@ inputs:
   docker-host:
     description: 'The Docker host'
     required: true
-    default: 'docker.pkg.github.com'
+    default: 'ghcr.io'
   docker-username:
     description: 'The Docker username'
     required: true
