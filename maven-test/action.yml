@@ -1,4 +1,5 @@
 name: 'Java / Maven - install and test code'
+description: 'Setup Java with Maven, and run a test command'
 
 inputs:
   working-directory:
