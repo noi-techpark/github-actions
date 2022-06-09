@@ -1,0 +1,35 @@
+name: 'Python / PIP - install and test code'
+
+inputs:
+  working-directory:
+    description: 'The working directory'
+    required: false
+    default: '.'
+  python-version:
+    description: "Version range or exact version of a Python version to use, using SemVer's version range syntax"
+    required: true
+    default: '3.x'
+  test-enabled:
+    description: 'Enable test step'
+    required: true
+    default: true
+  test-command:
+    description: 'The test command'
+    required: true
+    default: 'python -m unittest discover test'
+  
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      working-directory: ${{ inputs.working-directory }}
+      with:
+        python-version: ${{ inputs.python-version }} 
+        cache: pip
+      run: pip install -r requirements.txt
+    - name: Test code
+      if: ${{ inputs.test-enabled == 'true' }}
+      working-directory: ${{ inputs.working-directory }}
+      run: ${{ inputs.test-command }}
+      shell: bash
