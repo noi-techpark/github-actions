@@ -27,7 +27,9 @@ runs:
       with:
         python-version: ${{ inputs.python-version }} 
         cache: 'pip'
+    - name: Install dependencies
       run: pip install -r requirements.txt
+      shell: bash
     - name: Test code
       if: ${{ inputs.test-enabled == 'true' }}
       working-directory: ${{ inputs.working-directory }}
