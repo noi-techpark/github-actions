@@ -1,0 +1,58 @@
+name: 'AWS Lambda Sync'
+description: 'Build, archive and send a function update to AWS Lambda'
+
+inputs:
+  working-directory:
+    description: 'The working directory'
+    required: false
+    default: '.'
+  access-key-id:
+    description: 'The AWS access key ID'
+    required: true
+  secret-access-key:
+    description: 'The AWS secret access key'
+    required: true
+  region:
+    description: 'The AWS region'
+    required: true
+  lambda-function-name:
+    description: 'The AWS Lambda function name'
+    required: true
+  lambda-env-vars:
+    description: 'AWS Lambda Function Environment Variables as JSON Object'
+    required: false
+  folder:
+    description: 'The folder that should be synced'
+    required: true
+    default: './src'
+  
+runs:
+  using: "composite"
+  steps:
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ inputs.access-key-id }}
+        aws-secret-access-key: ${{ inputs.secret-access-key }}
+        aws-region: ${{ inputs.region }}
+    - name: Build and create ZIP Archive
+      working-directory: ${{ inputs.working-directory }}
+      run: |
+        pip install --no-cache-dir -r requirements.txt -t .
+        zip -r "../${{ inputs.lambda-function-name }}.zip" .
+      shell: bash
+    - name: Update AWS Lambda Function Configuration
+      working-directory: ${{ inputs.working-directory }}
+      run: >
+        aws lambda update-function-configuration 
+          --function-name ${{ inputs.lambda-function-name }}
+          --environment Variables=${{ inputs.lambda-env-vars }}
+      shell: bash
+    - name: Update AWS Lambda Function Code
+      working-directory: ${{ inputs.working-directory }}
+      run: >
+        aws lambda update-function-code 
+          --function-name ${{ inputs.lambda-function-name }}
+          --zip-file fileb://${{ inputs.lambda-function-name }}
+      shell: bash
+      
