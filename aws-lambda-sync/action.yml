@@ -46,9 +46,8 @@ runs:
       working-directory: ${{ inputs.working-directory }}
       run: |
         pwd
-        ls -la ../.github
-        ls -la ../..
-        ls -la ${GITHUB_WORKSPACE}
+        ls -la ../.github/workflows
+        ls -la ${GITHUB_WORKSPACE}/workflows
 
         aws lambda update-function-configuration \
           --function-name ${{ inputs.lambda-function-name }} \
