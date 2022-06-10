@@ -45,12 +45,9 @@ runs:
     - name: Update AWS Lambda Function Configuration
       working-directory: ${{ inputs.working-directory }}
       run: |
-        pwd
-        env|sort
-        
         aws lambda update-function-configuration \
           --function-name ${{ inputs.lambda-function-name }} \
-          --environment Variables=$(.github/env_to_simple_json.py)
+          --environment Variables=$(${GITHUB_ACTION_PATH}/env_to_simple_json.py)
       shell: bash
     - name: Update AWS Lambda Function Code
       working-directory: ${{ inputs.working-directory }}
