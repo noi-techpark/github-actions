@@ -18,9 +18,10 @@ inputs:
   lambda-function-name:
     description: 'The AWS Lambda function name'
     required: true
-  lambda-env-vars:
-    description: 'AWS Lambda Function Environment Variables as JSON Object'
-    required: false
+  lambda-environment-variable-prefix:
+    description: 'The prefix of the environment variables'
+    required: true
+    default: 'LAMBDA_'
   folder:
     description: 'The folder that should be synced'
     required: true
@@ -39,20 +40,20 @@ runs:
       working-directory: ${{ inputs.working-directory }}
       run: |
         pip install --no-cache-dir -r requirements.txt -t .
-        zip -r "../${{ inputs.lambda-function-name }}.zip" .
+        zip -r ${{ inputs.lambda-function-name }}.zip .
       shell: bash
     - name: Update AWS Lambda Function Configuration
       working-directory: ${{ inputs.working-directory }}
-      run: >
-        aws lambda update-function-configuration 
-          --function-name ${{ inputs.lambda-function-name }}
-          --environment Variables=${{ inputs.lambda-env-vars }}
+      run: |
+        aws lambda update-function-configuration \
+          --function-name ${{ inputs.lambda-function-name }} \
+          --environment Variables=$(./env_to_simple_json.py)
       shell: bash
     - name: Update AWS Lambda Function Code
       working-directory: ${{ inputs.working-directory }}
-      run: >
-        aws lambda update-function-code 
-          --function-name ${{ inputs.lambda-function-name }}
-          --zip-file fileb://${{ inputs.lambda-function-name }}
+      run: |
+        aws lambda update-function-code \
+          --function-name ${{ inputs.lambda-function-name }} \
+          --zip-file fileb://${{ inputs.lambda-function-name }}.zip
       shell: bash
       
