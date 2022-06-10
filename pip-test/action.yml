@@ -17,7 +17,7 @@ inputs:
   test-command:
     description: 'The test command'
     required: true
-    default: 'python -m unittest discover test'
+    default: 'python -m unittest discover test -t src -p test_*.py'
   
 runs:
   using: "composite"

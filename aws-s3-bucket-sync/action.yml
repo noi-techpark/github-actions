@@ -1,4 +1,5 @@
 name: 'AWS S3 bucket sync'
+description: 'Upload the given folder to a AWS S3 Bucket, missing files get deleted'
 
 inputs:
   working-directory:
@@ -16,6 +17,7 @@ inputs:
     required: true
   s3-bucket-name:
     description: 'The S3 bucket name'
+    required: true
   folder:
     description: 'The folder that should be synced'
     required: true
