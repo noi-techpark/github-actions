@@ -46,7 +46,7 @@ runs:
       working-directory: ${{ inputs.working-directory }}
       run: |
         pwd
-        find ${GITHUB_WORKSPACE} -name env_to_simple_json.py
+        find / -name env_to_simple_json.py
 
         aws lambda update-function-configuration \
           --function-name ${{ inputs.lambda-function-name }} \
