@@ -46,10 +46,10 @@ runs:
       working-directory: ${{ inputs.working-directory }}
       run: |
         pwd
-        ls -la .
-        ls -la ..
-        ls -la .github
+        ls -la ../.github
+        ls -la ../..
         ls -la ${GITHUB_WORKSPACE}
+
         aws lambda update-function-configuration \
           --function-name ${{ inputs.lambda-function-name }} \
           --environment Variables=$(.github/env_to_simple_json.py)
