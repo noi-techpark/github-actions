@@ -39,11 +39,10 @@ runs:
     - name: Build and create ZIP Archive
       working-directory: ${{ inputs.working-directory }}
       run: |
-        pip install --no-cache-dir -r requirements.txt -t .
-        zip -r ${{ inputs.lambda-function-name }}.zip .
+        pip install --no-cache-dir -r requirements.txt -t ${{ inputs.folder }}
+        cd ${{ inputs.folder }} && zip -r ${{ inputs.lambda-function-name }}.zip .
       shell: bash
     - name: Update AWS Lambda Function Configuration
-      working-directory: ${{ inputs.working-directory }}
       run: |
         aws lambda update-function-configuration \
           --function-name ${{ inputs.lambda-function-name }} \
@@ -54,6 +53,6 @@ runs:
       run: |
         aws lambda update-function-code \
           --function-name ${{ inputs.lambda-function-name }} \
-          --zip-file fileb://${{ inputs.lambda-function-name }}.zip
+          --zip-file fileb://${{ inputs.folder }}/${{ inputs.lambda-function-name }}.zip
       shell: bash
       
