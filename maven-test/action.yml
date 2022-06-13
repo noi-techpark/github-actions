@@ -26,7 +26,7 @@ runs:
       uses: actions/setup-java@v2
       with:
         java-version: ${{ inputs.java-version }}
-        distribution: 'adopt'
+        distribution: 'temurin'
         cache: 'maven'
     - name: Test code
       if: ${{ inputs.test-enabled == 'true' }}
