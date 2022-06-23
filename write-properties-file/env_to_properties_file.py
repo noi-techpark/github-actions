@@ -7,7 +7,7 @@ from configobj import ConfigObj
 env_keys = list(dict(os.environ).keys())
 
 prefix = str(os.environ.get("INPUT_PROPERTIESFILE-ENVIRONMENT-VARIABLE-PREFIX"))
-path = str(os.environ.get("INPUT_PATH"))
+path = sys.argv[1]
 
 config = ConfigObj(path)
 

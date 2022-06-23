@@ -15,5 +15,5 @@ runs:
   using: "composite"
   steps:
     - name: Update Properties File
-      run: ${GITHUB_ACTION_PATH}/env_to_properties_file.py
+      run: ${GITHUB_ACTION_PATH}/env_to_properties_file.py ${{ inputs.path }}
       shell: bash
