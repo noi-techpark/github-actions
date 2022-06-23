@@ -1,0 +1,19 @@
+name: 'Create or update a Java properties file'
+description: 'Update or insert some properties with a certain value in a Java .properties file.'
+
+inputs:
+  path:
+    description: 'The properties file'
+    required: true
+    default: 'application.properties'
+  propertiesfile-environment-variable-prefix:
+    description: 'The prefix of the environment variables'
+    required: true
+    default: 'PROPS_'
+
+runs:
+  using: "composite"
+  steps:
+    - name: Update Properties File
+      run: ${GITHUB_ACTION_PATH}/env_to_properties_file.py
+      shell: bash
