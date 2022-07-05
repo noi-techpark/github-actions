@@ -1,0 +1,44 @@
+name: 'PSQL over SSH'
+
+inputs:
+  working-directory:
+    description: 'The working directory'
+    required: false
+    default: '.'
+  ssh-private-key:
+    description: 'The SSH private key'
+    required: true
+  db_host:
+    description: 'The host where the action should be applied'
+    required: true
+  db_name:
+    description: 'The database name'
+    required: false
+    default: 'bdp'
+  db_user:
+    description: 'The database user'
+    required: false
+    default: 'bdp'
+  db_password:
+    description: 'The database password'
+    required: true
+  db_query:
+    description: 'The query that will be executed'
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup SSH connection
+      env:
+        SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+      run: |
+        ssh-agent -a $SSH_AUTH_SOCK > /dev/null
+        ssh-add - <<< "${{ inputs.ssh-private-key }}"
+      shell: bash
+    - name: Run the query
+      env:
+        SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+      working-directory: ${{ inputs.working-directory }}
+      run: ssh noi-techpark-bot@docker01.testingmachine.eu "PGPASSWORD=${{ inputs.db_password }} psql -h ${{ inputs.db_host }} -U ${{ inputs.db_user }} -d ${{ inputs.db_name }} ${{ inputs.db_query }}"
+      shell: bash
