@@ -46,5 +46,5 @@ runs:
       env:
         SSH_AUTH_SOCK: /tmp/ssh_agent.sock
       working-directory: ${{ inputs.working-directory }}
-      run: ${{ inputs.ssh_user }}@${{ inputs.ssh_host }} "PGPASSWORD=${{ inputs.db_password }} psql -h ${{ inputs.db_host }} -U ${{ inputs.db_user }} -d ${{ inputs.db_name }} ${{ inputs.db_query }}"
+      run: ssh ${{ inputs.ssh_user }}@${{ inputs.ssh_host }} "PGPASSWORD=${{ inputs.db_password }} psql -h ${{ inputs.db_host }} -U ${{ inputs.db_user }} -d ${{ inputs.db_name }} ${{ inputs.db_query }}"
       shell: bash
