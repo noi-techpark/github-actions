@@ -42,8 +42,8 @@ runs:
         ssh-agent -a $SSH_AUTH_SOCK > /dev/null
         ssh-add - <<< "${{ inputs.ssh-private-key }}"
       shell: bash
-    - name: ll check
-      run: ls -la
+    - name: why not there?
+      run: cat bluetooth-traffic/deltart.sql
       shell: bash   
     - name: Run the query
       env:
