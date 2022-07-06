@@ -43,7 +43,7 @@ runs:
     #     ssh-add - <<< "${{ inputs.ssh-private-key }}"
     #   shell: bash
     - name: Setup SSH key
-      run: echo "${{ inputs.ssh-private-key }}" > ssh-key
+      run: echo "${{ inputs.ssh-private-key }}" > ssh-key && chmod 600 ssh-key
       shell: bash
     - name: Run the query
       env:
