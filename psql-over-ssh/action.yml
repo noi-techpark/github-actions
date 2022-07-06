@@ -35,16 +35,19 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Setup SSH connection
-      env:
-        SSH_AUTH_SOCK: /tmp/ssh_agent.sock
-      run: |
-        ssh-agent -a $SSH_AUTH_SOCK > /dev/null
-        ssh-add - <<< "${{ inputs.ssh-private-key }}"
+    # - name: Setup SSH connection
+    #   env:
+    #     SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+    #   run: |
+    #     ssh-agent -a $SSH_AUTH_SOCK > /dev/null
+    #     ssh-add - <<< "${{ inputs.ssh-private-key }}"
+    #   shell: bash
+    - name: Setup SSH key
+      run: echo ${{ inputs.ssh-private-key }} > ssh-key
       shell: bash
     - name: Run the query
       env:
         SSH_AUTH_SOCK: /tmp/ssh_agent.sock
       working-directory: ${{ inputs.working-directory }}
-      run: ssh ${{ inputs.ssh-user }}@${{ inputs.ssh-host }} 'PGPASSWORD=${{ inputs.db-password }} psql -h ${{ inputs.db-host }} -U ${{ inputs.db-user }} -d ${{ inputs.db-name }} ${{ inputs.db-query }}'
+      run: ssh ${{ inputs.ssh-user }}@${{ inputs.ssh-host }} -i ssh-key 'PGPASSWORD=${{ inputs.db-password }} psql -h ${{ inputs.db-host }} -U ${{ inputs.db-user }} -d ${{ inputs.db-name }} ${{ inputs.db-query }}'
       shell: bash
