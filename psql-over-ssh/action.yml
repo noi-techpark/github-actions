@@ -42,9 +42,9 @@ runs:
         ssh-agent -a $SSH_AUTH_SOCK > /dev/null
         ssh-add - <<< "${{ inputs.ssh-private-key }}"
       shell: bash
-    # - name: Setup SSH key
-    #   run: echo "${{ inputs.ssh-private-key }}" > ssh-key && chmod 600 ssh-key
-    #   shell: bash
+    - name: ll check
+      run: ls -la
+      shell: bash   
     - name: Run the query
       env:
         SSH_AUTH_SOCK: /tmp/ssh_agent.sock
