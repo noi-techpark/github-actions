@@ -1,35 +1,35 @@
-name: 'PSQL over SSH'
+name: "PSQL over SSH"
 
 inputs:
   working-directory:
-    description: 'The working directory'
+    description: "The working directory"
     required: false
-    default: '.'
+    default: "."
   ssh-private-key:
-    description: 'The SSH private key'
+    description: "The SSH private key"
     required: true
   ssh-user:
-    description: 'The SSH user'
+    description: "The SSH user"
     required: true
   ssh-host:
-    description: 'The SSH host'
+    description: "The SSH host"
     required: true
   db-host:
-    description: 'The host where the action should be applied'
+    description: "The host where the action should be applied"
     required: true
   db-name:
-    description: 'The database name'
+    description: "The database name"
     required: false
-    default: 'bdp'
+    default: "bdp"
   db-user:
-    description: 'The database user'
+    description: "The database user"
     required: false
-    default: 'bdp'
+    default: "bdp"
   db-password:
-    description: 'The database password'
+    description: "The database password"
     required: true
   db-query:
-    description: 'The query that will be executed'
+    description: "The query that will be executed"
     required: true
 
 runs:
@@ -46,5 +46,5 @@ runs:
       env:
         SSH_AUTH_SOCK: /tmp/ssh_agent.sock
       working-directory: ${{ inputs.working-directory }}
-      run: ssh "${{ inputs.ssh_user }}"@"${{ inputs.ssh_host }}" 'PGPASSWORD="${{ inputs.db_password }}" psql -h "${{ inputs.db_host }}" -U "${{ inputs.db_user }}" -d "${{ inputs.db_name }}" "${{ inputs.db_query }}"'
+      run: ssh ${{ inputs.ssh-user }}@${{ inputs.ssh-host }} 'PGPASSWORD=${{ inputs.db-password }} psql -h ${{ inputs.db-host }} -U ${{ inputs.db-user }} -d ${{ inputs.db-name }} ${{ inputs.db-query }}'
       shell: bash
