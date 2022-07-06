@@ -8,6 +8,12 @@ inputs:
   ssh-private-key:
     description: 'The SSH private key'
     required: true
+  ssh-user:
+    description: 'The SSH user'
+    required: true
+  ssh-host:
+    description: 'The SSH host'
+    required: true
   db_host:
     description: 'The host where the action should be applied'
     required: true
@@ -40,5 +46,5 @@ runs:
       env:
         SSH_AUTH_SOCK: /tmp/ssh_agent.sock
       working-directory: ${{ inputs.working-directory }}
-      run: ssh noi-techpark-bot@docker01.testingmachine.eu "PGPASSWORD=${{ inputs.db_password }} psql -h ${{ inputs.db_host }} -U ${{ inputs.db_user }} -d ${{ inputs.db_name }} ${{ inputs.db_query }}"
+      run: ${{ inputs.ssh_user }}@${{ inputs.ssh_host }} "PGPASSWORD=${{ inputs.db_password }} psql -h ${{ inputs.db_host }} -U ${{ inputs.db_user }} -d ${{ inputs.db_name }} ${{ inputs.db_query }}"
       shell: bash
