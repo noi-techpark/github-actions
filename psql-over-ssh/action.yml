@@ -49,5 +49,5 @@ runs:
       env:
         SSH_AUTH_SOCK: /tmp/ssh_agent.sock
       working-directory: ${{ inputs.working-directory }}
-      run: ssh ${{ inputs.ssh-user }}@${{ inputs.ssh-host }} -i ssh-key 'PGPASSWORD=${{ inputs.db-password }} psql -h ${{ inputs.db-host }} -U ${{ inputs.db-user }} -d ${{ inputs.db-name }} ${{ inputs.db-query }}'
+      run: ssh ${{ inputs.ssh-user }}@${{ inputs.ssh-host }} -i ssh-key -o StrictHostKeyChecking=no 'PGPASSWORD=${{ inputs.db-password }} psql -h ${{ inputs.db-host }} -U ${{ inputs.db-user }} -d ${{ inputs.db-name }} ${{ inputs.db-query }}'
       shell: bash
