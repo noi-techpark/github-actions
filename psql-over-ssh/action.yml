@@ -14,21 +14,21 @@ inputs:
   ssh-host:
     description: 'The SSH host'
     required: true
-  db_host:
+  db-host:
     description: 'The host where the action should be applied'
     required: true
-  db_name:
+  db-name:
     description: 'The database name'
     required: false
     default: 'bdp'
-  db_user:
+  db-user:
     description: 'The database user'
     required: false
     default: 'bdp'
-  db_password:
+  db-password:
     description: 'The database password'
     required: true
-  db_query:
+  db-query:
     description: 'The query that will be executed'
     required: true
 
