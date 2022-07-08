@@ -32,6 +32,10 @@ inputs:
   project-name:
     description: 'The project name'
     required: true
+  ssh-setup:
+    description: "Setup SSH connection with ssh_agent. Only needed if no other action made already a connection"
+    required: false
+    default: true
 
 runs:
   using: "composite"
@@ -40,6 +44,7 @@ runs:
       run: echo "RELEASE_NAME=$(date +'%Y-%m-%d-%H-%M-%S')" >> $GITHUB_ENV
       shell: bash
     - name: Setup SSH connection
+      if: ${{ inputs.ssh-setup  == 'true' }}
       env:
         SSH_AUTH_SOCK: /tmp/ssh_agent.sock
       run: |
