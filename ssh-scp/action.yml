@@ -1,0 +1,39 @@
+name: "SSH scp to copy files to remote server"
+
+inputs:
+  working-directory:
+    description: "The working directory"
+    required: false
+    default: "."
+  ssh-private-key:
+    description: "The SSH private key"
+    required: true
+  ssh-user:
+    description: "The SSH user"
+    required: true
+  ssh-host:
+    description: "The SSH host"
+    required: true
+  local-path:
+    description: "The path to the local file/directory that wil be copied"
+    required: true
+  remote-path:
+    description: "The remote path on the server, where the file/directory will be copied to"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup SSH connection
+      env:
+        SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+      run: |
+        ssh-agent -a $SSH_AUTH_SOCK > /dev/null
+        ssh-add - <<< "${{ inputs.ssh-private-key }}"
+      shell: bash
+    - name: Copy file over ssh
+      env:
+        SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+      working-directory: ${{ inputs.working-directory }}
+      run: scp ${{ inputs.local-path }} ${{ inputs.ssh-user }}@${{ inputs.ssh-host }}:${{ inputs.remote-path }} -o StrictHostKeyChecking=no
+      shell: bash
