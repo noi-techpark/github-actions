@@ -35,5 +35,5 @@ runs:
       env:
         SSH_AUTH_SOCK: /tmp/ssh_agent.sock
       working-directory: ${{ inputs.working-directory }}
-      run: scp ${{ inputs.local-path }} ${{ inputs.ssh-user }}@${{ inputs.ssh-host }}:${{ inputs.remote-path }} -o StrictHostKeyChecking=no
+      run: scp -o StrictHostKeyChecking=no ${{ inputs.local-path }} ${{ inputs.ssh-user }}@${{ inputs.ssh-host }}:${{ inputs.remote-path }}
       shell: bash
