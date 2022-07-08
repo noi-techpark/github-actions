@@ -14,6 +14,10 @@ inputs:
   ssh-host:
     description: "The SSH host"
     required: true
+  ssh-setup:
+    description: "Setup SSH connection with ssh_agent. Only needed if no other action made already a connection"
+    required: false
+    default: true
   local-path:
     description: "The path to the local file/directory that wil be copied"
     required: true
@@ -25,12 +29,14 @@ runs:
   using: "composite"
   steps:
     - name: Setup SSH connection
+      if: ${{ inputs.ssh-setup }}
       env:
         SSH_AUTH_SOCK: /tmp/ssh_agent.sock
       run: |
         ssh-agent -a $SSH_AUTH_SOCK > /dev/null
         ssh-add - <<< "${{ inputs.ssh-private-key }}"
       shell: bash
+
     - name: Copy file over ssh
       env:
         SSH_AUTH_SOCK: /tmp/ssh_agent.sock
