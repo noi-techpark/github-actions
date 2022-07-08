@@ -24,7 +24,8 @@ inputs:
     required: true
   remote-path:
     description: "The remote path on the server, where the file/directory will be copied to"
-    required: true
+    required: false
+    default: /home/noi-techpark-bot
 
 runs:
   using: "composite"
