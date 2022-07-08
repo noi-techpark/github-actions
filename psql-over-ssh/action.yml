@@ -40,7 +40,7 @@ runs:
   using: "composite"
   steps:
     - name: Setup SSH connection
-      if: ${{ inputs.ssh-setup }}
+      if: ${{ inputs.ssh-setup == 'true' }}
       env:
         SSH_AUTH_SOCK: /tmp/ssh_agent.sock
       run: |
