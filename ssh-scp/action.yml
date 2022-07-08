@@ -10,7 +10,8 @@ inputs:
     required: true
   ssh-user:
     description: "The SSH user"
-    required: true
+    required: false
+    default: noi-techpark-bot
   ssh-host:
     description: "The SSH host"
     required: true
