@@ -1,0 +1,128 @@
+name: 'Docker deployment'
+
+inputs:
+  terraform-working-directory:
+    description: 'The Terraform working directory'
+    required: false
+    default: 'infrastructure/terraform'
+  terraform-version:
+    description: 'The Terraform version'
+    required: false
+    default: 1.1
+  terraform-general-config-file:
+    description: 'The general configuration file of Terraform'
+    required: false
+    default: 'config/general.tfvars'
+  terraform-all-config-file:
+    description: 'The configuration file of Terraform inclucing all hosts'
+    required: false
+    default: 'config/all.tfvars'
+  terraform-group-one-config-file:
+    description: 'The configuration file of Terraform inclucing the first set of hosts'
+    required: false
+    default: 'config/groupone.tfvars'
+  terraform-group-two-config-file:
+    description: 'The configuration file of Terraform inclucing the second set of hosts'
+    required: false
+    default: 'config/grouptwo.tfvars'
+  ansible-working-directory:
+    description: 'The Ansible working directory'
+    required: false
+    default: 'infrastructure/ansible'
+  ansible-playbook-file:
+    description: 'The Ansible playbook filename'
+    required: true
+    default: 'deploy.yml'
+  ansible-requirements-file:
+    description: 'The Ansible requirements filename'
+    required: true
+    default: 'requirements.yml'
+  ansible-hosts:
+    description: 'The hosts where the deployment should be applied'
+    required: true
+  ansible-hosts-group-one:
+    description: 'The name of the first group of servers where the deployment should be applied'
+    required: true
+    default: 'groupone'
+  ansible-hosts-group-two:
+    description: 'The name of the second group of servers where the deployment should be applied'
+    required: true
+    default: 'grouptwo'
+  ssh-private-key:
+    description: 'The SSH private key'
+    required: true
+  docker-host:
+    description: 'The Docker host'
+    required: true
+    default: 'docker.pkg.github.com'
+  docker-username:
+    description: 'The Docker username'
+    required: true
+  docker-password:
+    description: 'The Docker password'
+    required: true
+  project-name:
+    description: 'The project name'
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Generate release name
+      run: echo "RELEASE_NAME=$(date +'%Y-%m-%d-%H-%M-%S')" >> $GITHUB_ENV
+      shell: bash
+    - name: Setup SSH connection
+      env:
+        SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+      run: |
+        ssh-agent -a $SSH_AUTH_SOCK > /dev/null
+        ssh-add - <<< "${{ inputs.ssh-private-key }}"
+      shell: bash
+    - name: Install Ansible requirements
+      env:
+        SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+      working-directory: ${{ inputs.ansible-working-directory }}
+      run: ansible-galaxy install -f -r ${{ inputs.ansible-requirements-file }}
+      shell: bash
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v2
+      with:
+        terraform_version: ${{ inputs.terraform-version }}
+    - name: Initialize Terraform
+      working-directory: ${{ inputs.terraform-working-directory }}
+      run: terraform init
+      shell: bash
+    - name: Deactivate second group of hosts
+      working-directory: ${{ inputs.terraform-working-directory }}
+      run: terraform apply -auto-approve -var-file="${{ inputs.terraform-general-config-file }}" -var-file="${{ inputs.terraform-group-one-config-file }}"
+      shell: bash
+    - name: Deploy second group of hosts
+      env:
+        SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+      working-directory: ${{ inputs.ansible-working-directory }}
+      run: ansible-playbook --limit='${{ inputs.ansible-hosts }}:&${{ inputs.ansible-hosts-group-two }}' ${{ inputs.ansible-playbook-file }} --extra-vars "project_name=${{ inputs.project-name }}" --extra-vars "release_name=${{ env.RELEASE_NAME }}" --extra-vars "docker_host=${{ inputs.docker-host }}" --extra-vars "docker_username=${{ inputs.docker-username }}" --extra-vars "docker_password=${{ inputs.docker-password }}"
+      shell: bash
+    - name: Activate all hosts
+      working-directory: ${{ inputs.terraform-working-directory }}
+      run: terraform apply -auto-approve -var-file="${{ inputs.terraform-general-config-file }}" -var-file="${{ inputs.terraform-all-config-file }}"
+      shell: bash
+    - name: Pause for 30 seconds
+      run: sleep 30
+      shell: bash
+    - name: Deactivate first group of hosts
+      working-directory: ${{ inputs.terraform-working-directory }}
+      run: terraform apply -auto-approve -var-file="${{ inputs.terraform-general-config-file }}" -var-file="${{ inputs.terraform-group-two-config-file }}"
+      shell: bash
+    - name: Deploy first group of hosts
+      env:
+        SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+      working-directory: ${{ inputs.ansible-working-directory }}
+      run: ansible-playbook --limit='${{ inputs.ansible-hosts }}:&${{ inputs.ansible-hosts-group-one }}' ${{ inputs.ansible-playbook-file }} --extra-vars "project_name=${{ inputs.project-name }}" --extra-vars "release_name=${{ env.RELEASE_NAME }}" --extra-vars "docker_host=${{ inputs.docker-host }}" --extra-vars "docker_username=${{ inputs.docker-username }}" --extra-vars "docker_password=${{ inputs.docker-password }}"
+      shell: bash
+    - name: Activate all hosts
+      working-directory: ${{ inputs.terraform-working-directory }}
+      run: terraform apply -auto-approve -var-file="${{ inputs.terraform-general-config-file }}" -var-file="${{ inputs.terraform-all-config-file }}"
+      shell: bash
+    - name: Pause for 30 seconds
+      run: sleep 30
+      shell: bash
