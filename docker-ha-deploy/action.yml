@@ -9,6 +9,12 @@ inputs:
     description: 'The Terraform version'
     required: false
     default: 1.1
+  terraform-aws-access-key-id:
+    description: 'The access key id that should be used for accessing AWS'
+    required: true
+  terraform-aws-secret-access-key:
+    description: 'The secret access key that should be used for accessing AWS'
+    required: true
   terraform-all-variable-file:
     description: 'The variable file of Terraform inclucing all hosts to be active'
     required: false
@@ -82,14 +88,23 @@ runs:
       shell: bash
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v2
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.terraform-aws-access-key-id }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.terraform-aws-secret-access-key }}
       with:
         terraform_version: ${{ inputs.terraform-version }}
     - name: Initialize Terraform
       working-directory: ${{ inputs.terraform-working-directory }}
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.terraform-aws-access-key-id }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.terraform-aws-secret-access-key }}
       run: terraform init
       shell: bash
     - name: Deactivate second group of hosts
       working-directory: ${{ inputs.terraform-working-directory }}
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.terraform-aws-access-key-id }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.terraform-aws-secret-access-key }}
       run: terraform apply -auto-approve -var-file="${{ inputs.terraform-group-one-variable-file }}"
       shell: bash
     - name: Deploy second group of hosts
@@ -100,6 +115,9 @@ runs:
       shell: bash
     - name: Activate all hosts
       working-directory: ${{ inputs.terraform-working-directory }}
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.terraform-aws-access-key-id }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.terraform-aws-secret-access-key }}
       run: terraform apply -auto-approve -var-file="${{ inputs.terraform-all-variable-file }}"
       shell: bash
     - name: Pause for 30 seconds
@@ -107,6 +125,9 @@ runs:
       shell: bash
     - name: Deactivate first group of hosts
       working-directory: ${{ inputs.terraform-working-directory }}
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.terraform-aws-access-key-id }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.terraform-aws-secret-access-key }}
       run: terraform apply -auto-approve -var-file="${{ inputs.terraform-group-two-variable-file }}"
       shell: bash
     - name: Deploy first group of hosts
@@ -117,6 +138,9 @@ runs:
       shell: bash
     - name: Activate all hosts
       working-directory: ${{ inputs.terraform-working-directory }}
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.terraform-aws-access-key-id }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.terraform-aws-secret-access-key }}
       run: terraform apply -auto-approve -var-file="${{ inputs.terraform-all-variable-file }}"
       shell: bash
     - name: Pause for 30 seconds
