@@ -9,22 +9,18 @@ inputs:
     description: 'The Terraform version'
     required: false
     default: 1.1
-  terraform-general-config-file:
-    description: 'The general configuration file of Terraform'
+  terraform-all-variable-file:
+    description: 'The variable file of Terraform inclucing all hosts to be active'
     required: false
-    default: 'config/general.tfvars'
-  terraform-all-config-file:
-    description: 'The configuration file of Terraform inclucing all hosts'
+    default: 'all.tfvars'
+  terraform-group-one-variable-file:
+    description: 'The variable file of Terraform inclucing the first set of hosts to be active'
     required: false
-    default: 'config/all.tfvars'
-  terraform-group-one-config-file:
-    description: 'The configuration file of Terraform inclucing the first set of hosts'
+    default: 'groupone.tfvars'
+  terraform-group-two-variable-file:
+    description: 'The variable file of Terraform inclucing the second set of hosts to be active'
     required: false
-    default: 'config/groupone.tfvars'
-  terraform-group-two-config-file:
-    description: 'The configuration file of Terraform inclucing the second set of hosts'
-    required: false
-    default: 'config/grouptwo.tfvars'
+    default: 'grouptwo.tfvars'
   ansible-working-directory:
     description: 'The Ansible working directory'
     required: false
@@ -94,7 +90,7 @@ runs:
       shell: bash
     - name: Deactivate second group of hosts
       working-directory: ${{ inputs.terraform-working-directory }}
-      run: terraform apply -auto-approve -var-file="${{ inputs.terraform-general-config-file }}" -var-file="${{ inputs.terraform-group-one-config-file }}"
+      run: terraform apply -auto-approve -var-file="${{ inputs.terraform-group-one-variable-file }}"
       shell: bash
     - name: Deploy second group of hosts
       env:
@@ -104,14 +100,14 @@ runs:
       shell: bash
     - name: Activate all hosts
       working-directory: ${{ inputs.terraform-working-directory }}
-      run: terraform apply -auto-approve -var-file="${{ inputs.terraform-general-config-file }}" -var-file="${{ inputs.terraform-all-config-file }}"
+      run: terraform apply -auto-approve -var-file="${{ inputs.terraform-all-variable-file }}"
       shell: bash
     - name: Pause for 30 seconds
       run: sleep 30
       shell: bash
     - name: Deactivate first group of hosts
       working-directory: ${{ inputs.terraform-working-directory }}
-      run: terraform apply -auto-approve -var-file="${{ inputs.terraform-general-config-file }}" -var-file="${{ inputs.terraform-group-two-config-file }}"
+      run: terraform apply -auto-approve -var-file="${{ inputs.terraform-group-two-variable-file }}"
       shell: bash
     - name: Deploy first group of hosts
       env:
@@ -121,7 +117,7 @@ runs:
       shell: bash
     - name: Activate all hosts
       working-directory: ${{ inputs.terraform-working-directory }}
-      run: terraform apply -auto-approve -var-file="${{ inputs.terraform-general-config-file }}" -var-file="${{ inputs.terraform-all-config-file }}"
+      run: terraform apply -auto-approve -var-file="${{ inputs.terraform-all-variable-file }}"
       shell: bash
     - name: Pause for 30 seconds
       run: sleep 30
