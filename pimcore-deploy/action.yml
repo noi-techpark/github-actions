@@ -1,0 +1,56 @@
+name: "Pimcore deployment"
+
+inputs:
+  working-directory:
+    description: "The working directory"
+    required: false
+    default: "."
+  ssh-private-key:
+    description: "The SSH private key"
+    required: true
+  ssh-host:
+    description: "The SSH host"
+    required: true
+  ssh-setup:
+    description: "Setup SSH connection with ssh_agent. Only needed if no other action made already a connection"
+    required: false
+    default: true
+  install-path:
+    description: "The installation path on the destination host"
+    required: true
+  domain:
+    description: "The domain used for the website"
+    required: true 
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup SSH connection
+      if: ${{ inputs.ssh-setup == 'true' }}
+      env:
+        SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+      run: |
+        ssh-agent -a $SSH_AUTH_SOCK > /dev/null
+        ssh-add - <<< "${{ inputs.ssh-private-key }}"
+      shell: bash
+    - name: Deployment
+      env:
+        SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+      working-directory: ${{ inputs.working-directory }}
+      run: |
+          ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null www-data@${{ inputs.ssh-host }} " \
+                        set -xeo pipefail
+                        cd ${{ inputs.install-path }}
+                        cp var/config/website-settings.php ../website-settings.php
+                        git checkout ${GITHUB_REF##*/}
+                        git fetch --all --prune
+                        git reset --hard origin/${GITHUB_REF##*/}
+                        git pull
+                        sed -ie 's/\\(\\"domain\\" => \\)\\([^,]*\\)/\\1\\"${{ inputs.domain }}\\"/' var/config/system.php
+                        sed -ie 's/\\(\\"redirect_to_maindomain\\" => \\)\\([^,]*\\)/\\1FALSE/' var/config/system.php
+                        rm -rf var/cache/*
+                        chmod +x ./bin/console
+                        cp -f ../website-settings.php var/config/website-settings.php
+                        ./bin/console c:c -e dev
+                        ./bin/console c:c -e prod
+      shell: bash
