@@ -26,8 +26,8 @@ runs:
     KEYCLOAK_CLIENT_ID_TEST: it.bz.opendatahub.webcomponents.cli
 
     # PROD
-    API_URL_PROD: https://api.webcomponents.opendatahub.bz.it/
-    KEYCLOAK_URL_PROD: https://auth.opendatahub.bz.it/auth/
+    API_URL_PROD: https://api.webcomponents.opendatahub.com/
+    KEYCLOAK_URL_PROD: https://auth.opendatahub.com/auth/
     KEYCLOAK_REALM_PROD: noi
     KEYCLOAK_CLIENT_ID_PROD: it.bz.opendatahub.webcomponents.cli
     KEYCLOAK_CLIENT_SECRET: ${{ inputs.keycloak-secret }}
