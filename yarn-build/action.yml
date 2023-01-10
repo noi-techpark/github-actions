@@ -1,0 +1,33 @@
+name: 'Yarn / NPM - install and build code'
+
+inputs:
+  working-directory:
+    description: 'The working directory'
+    required: false
+    default: '.'
+  node-version:
+    description: 'The Node version that should be used for the build'
+    required: true
+    default: '16.x'
+  build-command:
+    description: 'The build command'
+    required: true
+    default: 'yarn build'
+  
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Node
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ inputs.node-version }}
+        cache: yarn
+        cache-dependency-path: ${{ inputs.working-directory }}/package-lock.json
+    - name: Install dependencies
+      working-directory: ${{ inputs.working-directory }}
+      run: yarn
+      shell: bash
+    - name: Build code
+      working-directory: ${{ inputs.working-directory }}
+      run: ${{ inputs.build-command }}
+      shell: bash
