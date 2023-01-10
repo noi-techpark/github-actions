@@ -1,0 +1,49 @@
+name: 'Yarn / Node - install and test code'
+
+inputs:
+  working-directory:
+    description: 'The working directory'
+    required: false
+    default: '.'
+  node-version:
+    description: 'The Node version that should be used for the build'
+    required: true
+    default: '16.x'
+  test-enabled:
+    description: 'Enable test step'
+    default: true
+  lint-enabled:
+    description: 'Enable lint step'
+    default: true
+  test-command:
+    description: 'The test command'
+    required: true
+    default: 'yarn test'
+  lint-command:
+    description: 'The lint command'
+    required: true
+    default: 'yarn lint'
+  
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Node
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ inputs.node-version }}
+        cache: yarn
+        cache-dependency-path: ${{ inputs.working-directory }}/package-lock.json
+    - name: Install dependencies
+      working-directory: ${{ inputs.working-directory }}
+      run: yarn
+      shell: bash
+    - name: Lint code
+      if: ${{ inputs.lint-enabled == 'true' }}
+      working-directory: ${{ inputs.working-directory }}
+      run: ${{ inputs.lint-command }}
+      shell: bash
+    - name: Test code
+      if: ${{ inputs.test-enabled == 'true' }}
+      working-directory: ${{ inputs.working-directory }}
+      run: ${{ inputs.test-command }}
+      shell: bash
