@@ -1,0 +1,8 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: github-actions
+Upstream-Contact: NOI Techpark <digital@noi.bz.it>
+Source: https://github.com/noi-techpark/github-actions
+
+Files: .gitignore env-file/.env env-file/Dockerfile webcomp-push/Dockerfile
+Copyright: (c) NOI Techpark <digital@noi.bz.it>
+License: CC0-1.0

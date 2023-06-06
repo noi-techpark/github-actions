@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: NOI Techpark <digital@noi.bz.it>
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 name: 'AWS S3 bucket sync'
 description: 'Upload the given folder to a AWS S3 Bucket, missing files get deleted'
 

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: NOI Techpark <digital@noi.bz.it>
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 name: 'Create or update a Java properties file'
 description: 'Update or insert some properties with a certain value in a Java .properties file.'
 

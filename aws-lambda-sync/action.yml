@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: NOI Techpark <digital@noi.bz.it>
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 name: 'AWS Lambda Sync'
 description: 'Build, archive and send a function update to AWS Lambda'
 
