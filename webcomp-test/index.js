@@ -8,7 +8,7 @@ import io from "@actions/io";
 import fs from "fs";
 
 try {
-    const originTestEnabled = core.getInput("origin-test-enabled");
+    const originTestEnabled = core.getBooleanInput("origin-test-enabled");
     console.log(`Testing for origin is${originTestEnabled ? " " : " not "}enabled`);
 
     const workingDirectory = core.getInput("working-directory");
