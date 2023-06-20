@@ -6,6 +6,7 @@ import core from "@actions/core";
 import fs from "fs";
 
 function originTest(path, keyword) {
+    console.log(`Reading entries of path: ${path}`);
     let entries = fs.readdirSync(path);
 
     return entries.map((entry) => {
@@ -14,6 +15,7 @@ function originTest(path, keyword) {
         if (fs.lstatSync(entryPath).isDirectory) {
             return originTest(entryPath, keyword);
         } else {
+            console.log(`Checking for occurence of ${keyword} in ${entryPath}`);
             return fs.readFileSync(entryPath, "utf-8").includes("origin");
         }
     }).reduce((prev, current) => { return prev ||current }, false);
