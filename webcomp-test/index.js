@@ -10,7 +10,7 @@ function originTest(path, keyword) {
 
     return entries.map((entry) => {
         if (fs.lstatSync(entry).isDirectory) {
-            return originTest(entry, keyword);
+            return originTest(`${path}/${entry}`, keyword);
         } else {
             return fs.readFileSync(entry, "utf-8").includes("origin");
         }
