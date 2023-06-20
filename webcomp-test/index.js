@@ -16,7 +16,7 @@ function originTest(path, keyword) {
             return originTest(entryPath, keyword);
         } else {
             console.log(`Checking for occurence of ${keyword} in ${entryPath}`);
-            let includesKeyword = fs.readFileSync(entryPath, "utf-8").includes("origin");
+            let includesKeyword = fs.readFileSync(entryPath, "utf-8").includes(keyword);
             if (includesKeyword) console.log(`Found ${keyword} in ${entryPath}`);
             return includesKeyword
         }
