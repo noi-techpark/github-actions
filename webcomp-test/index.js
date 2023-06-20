@@ -8,15 +8,13 @@ import io from "@actions/io";
 import fs from "fs";
 
 try {
-    const originTestEnabled = core.getInput("originTestEnabled");
+    const originTestEnabled = core.getInput("origin-test-enabled");
     console.log(`Testing for origin is${originTestEnabled ? " " : " not "}enabled`);
 
-    const workingDirectory = core.getInput("workingDirectory");
-
+    const workingDirectory = core.getInput("working-directory");
     console.log(workingDirectory);
 
     let entries = fs.readdirSync(workingDirectory);
-
     console.log(entries);
 } catch (error) {
     core.setFailed(error.message);

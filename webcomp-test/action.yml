@@ -7,6 +7,7 @@ name: 'Webcomponent testing'
 inputs:
   working-directory:
     description: 'The working directory'
+    required: false
     default: '.'
   origin-test-enabled:
     description: 'Enable testing for a set origin parameter, currently tests whether or not the string origin is contained somewhere.'
