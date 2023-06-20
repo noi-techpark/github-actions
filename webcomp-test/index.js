@@ -12,11 +12,13 @@ function originTest(path, keyword) {
     return entries.map((entry) => {
         const entryPath = `${path}/${entry}`;
 
-        if (fs.lstatSync(entryPath).isDirectory) {
+        if (fs.lstatSync(entryPath).isDirectory()) {
             return originTest(entryPath, keyword);
         } else {
             console.log(`Checking for occurence of ${keyword} in ${entryPath}`);
-            return fs.readFileSync(entryPath, "utf-8").includes("origin");
+            let includesKeyword = fs.readFileSync(entryPath, "utf-8").includes("origin");
+            if (includesKeyword) console.log(`Found ${keyword} in ${entryPath}`);
+            return includesKeyword
         }
     }).reduce((prev, current) => { return prev ||current }, false);
 }
