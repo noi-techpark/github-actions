@@ -9,10 +9,12 @@ function originTest(path, keyword) {
     let entries = fs.readdirSync(path);
 
     return entries.map((entry) => {
-        if (fs.lstatSync(entry).isDirectory) {
-            return originTest(`${path}/${entry}`, keyword);
+        const entryPath = `${path}/${entry}`;
+
+        if (fs.lstatSync(entryPath).isDirectory) {
+            return originTest(entryPath, keyword);
         } else {
-            return fs.readFileSync(entry, "utf-8").includes("origin");
+            return fs.readFileSync(entryPath, "utf-8").includes("origin");
         }
     }).reduce((prev, current) => { return prev ||current }, false);
 }
