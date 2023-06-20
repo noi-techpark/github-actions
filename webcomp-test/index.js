@@ -4,14 +4,18 @@
 
 import core from "@actions/core";
 import github from "@actions/github";
+import io from "@actions/io";
+import fs from "fs";
 
 try {
-    const originTestEnabled = core.getInput('originTestEnabled');
+    const originTestEnabled = core.getInput("originTestEnabled");
     console.log(`Testing for origin is${originTestEnabled ? " " : " not "}enabled`);
 
-    // Get the JSON webhook payload for the event that triggered the workflow
-    const payload = JSON.stringify(github.context.payload, undefined, 2)
-    console.log(`The event payload: ${payload}`);
+    const workingDirectory = core.getInput("workingDirectory");
+
+    let entries = fs.readdirSync(workingDirectory);
+
+    console.log(entries);
 } catch (error) {
     core.setFailed(error.message);
 }
