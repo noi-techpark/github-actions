@@ -10,9 +10,13 @@ inputs:
     required: false
     default: '.'
   origin-test-enabled:
-    description: 'Enable testing for a set origin parameter, currently tests whether or not the string origin is contained somewhere.'
+    description: 'Enable testing for a set origin parameter, currently tests whether or not the string origin is contained somewhere'
     required: false
     default: true
+  origin-test-keyword:
+    description: 'The keyword that the origin test searches for in the source code, only needed if the origin test is enabled'
+    required: false
+    default: 'origin'
   
 runs:
   using: 'node16'
