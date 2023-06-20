@@ -19,18 +19,17 @@ function originTest(path, keyword) {
 
 try {
     const originTestEnabled = core.getBooleanInput("origin-test-enabled");
+    const originTestDirectory = core.getInput("origin-test-directory");
     const originTestKeyword = core.getInput("origin-test-keyword");
 
     if (originTestEnabled) {
-        console.log(`Testing for origin is enabled with keyword ${originTestKeyword}`);
+        console.log(`Testing for origin is enabled in directory ${originTestDirectory} with keyword ${originTestKeyword}`);
     } else {
         console.log(`Testing for origin is not enabled`);
     }
 
-    const workingDirectory = core.getInput("working-directory");
-
     if (originTestEnabled) {
-        if (!originTest(workingDirectory, originTestKeyword)) core.setFailed("No occurrence of origin found");
+        if (!originTest(originTestDirectory, originTestKeyword)) core.setFailed("No occurrence of origin found");
     }
 } catch (error) {
     core.setFailed(error.message);
