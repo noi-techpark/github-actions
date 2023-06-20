@@ -2,10 +2,8 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import core from "@actions/core";
-import github from "@actions/github";
-import io from "@actions/io";
-import fs from "fs";
+const core = require("@actions/core");
+const fs = require("fs");
 
 try {
     const originTestEnabled = core.getInput("originTestEnabled");
