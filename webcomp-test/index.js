@@ -46,9 +46,7 @@ try {
 
     if (originTestEnabled) {
         if (!originTest(originTestDirectory, originTestKeyword, originTestFileExt)) {
-            const msg = "No occurrence of origin found";
-            core.error(msg);
-            core.setFailed(msg);
+            core.setFailed("No occurrence of origin found");
         }
     }
 } catch (error) {
