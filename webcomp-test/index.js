@@ -14,7 +14,6 @@ function originTest(path, keyword, fileExt) {
         if (fs.lstatSync(entryPath).isDirectory()) {
             return originTest(entryPath, keyword, fileExt);
         } else {
-            console.log(fileExt);
             const hasValidExt = [...fileExt].map((ext) => entryPath.endsWith(ext)).reduce((prev, current) => prev || current, false)
             if (!hasValidExt) {
                 console.log(`Skipping ${entryPath}`);

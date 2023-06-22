@@ -17,7 +17,7 @@ inputs:
     description: 'The keyword that the origin test searches for in the source code, only needed if the origin test is enabled'
     required: false
     default: 'origin'
-  origin-test-include-ext:
+  origin-test-file-ext:
     description: 'File extensions which should be searchd for the origin test keyword'
     required: false
     default: 'js jsx ts tsx vue'
