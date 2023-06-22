@@ -14,6 +14,7 @@ function originTest(path, keyword, fileExt) {
         if (fs.lstatSync(entryPath).isDirectory()) {
             return originTest(entryPath, keyword, fileExt);
         } else {
+            console.log(fileExt);
             const hasValidExt = [...fileExt].map((ext) => entryPath.endsWith(ext)).reduce((prev, current) => prev || current, false)
             if (!hasValidExt) {
                 console.log(`Skipping ${entryPath}`);
@@ -39,7 +40,7 @@ try {
 
     if (originTestEnabled) {
         console.log(`Testing for origin is enabled in directory ${originTestDirectory} with keyword ${originTestKeyword}`);
-        console.log(`Searching in files with extensions: ${originTestFileExt}`);
+        console.log(`Searching in files with extensions: ${originTestFileExt.join(", ")}`);
     } else {
         console.log(`Testing for origin is not enabled`);
     }
