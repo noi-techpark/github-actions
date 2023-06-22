@@ -17,6 +17,14 @@ inputs:
     description: 'The keyword that the origin test searches for in the source code, only needed if the origin test is enabled'
     required: false
     default: 'origin'
+  origin-test-include-ext:
+    description: 'File extensions which should be searchd for the origin test keyword'
+    required: false
+    default: 'js jsx ts tsx vue'
+  # manifest-test-enabled:
+  #   description: 'Enable testing for the existence and validity of a manifest.json file at the projects root'
+  #   required: false
+  #   default: true
   
 runs:
   using: 'node16'
