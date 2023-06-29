@@ -39,8 +39,6 @@ try {
     const originTestKeyword = core.getInput("origin-test-keyword");
     const originTestFileExt = core.getInput("origin-test-file-ext").split(" ");
 
-    const manifestTestEnabled = core.getBooleanInput("origin-test-enabled");
-
     if (originTestEnabled) {
         console.log(`Testing for origin is enabled in directory ${originTestDirectory} with keyword ${originTestKeyword}`);
         console.log(`Searching in files with extensions: ${originTestFileExt.join(", ")}`);
@@ -55,11 +53,12 @@ try {
     }
 
     // Manifest Test
-    if (originTestEnabled) {
-        console.log(`Testing for origin is enabled in directory ${originTestDirectory} with keyword ${originTestKeyword}`);
-        console.log(`Searching in files with extensions: ${originTestFileExt.join(", ")}`);
+    const manifestTestEnabled = core.getBooleanInput("origin-test-enabled");
+
+    if (manifestTestEnabled) {
+        console.log(`Testing manifest file is enabled`);
     } else {
-        console.log(`Testing for origin is not enabled`);
+        console.log(`Testing manifest file is not enabled`);
     }
 
     if (manifestTestEnabled) {
@@ -77,6 +76,8 @@ try {
             }).join("\n");
 
             core.setFailed(errorsStr);
+        } else {
+            console.log("Manifest file ok");
         }
     }
 } catch (error) {
