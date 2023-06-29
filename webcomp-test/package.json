@@ -11,6 +11,6 @@
   "license": "AGPL-3.0-or-later",
   "dependencies": {
     "@actions/core": "^1.10.0",
-    "ajv": "^8.12.0"
+    "ajv": "^6.12.2"
   }
 }
