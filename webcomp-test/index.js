@@ -66,7 +66,6 @@ try {
         let manifestStr = fs.readFileSync("wcs-manifest.json", "utf-8");
         let validator = validate(manifestStr);
         let errors = validator.errors;
-        console.log(`errors: ${errors}`)
         if (errors) {
             let errorsStr = errors.map((error) => {
                 let errorStr = `${error.path ? error.path : "(ROOT)"}: ${error.text}`;
@@ -74,10 +73,9 @@ try {
                     errorStr += ": ";
                     errorStr += Object.values(error.params).join(", ");
                 }
-                errorStr += "\n";
-            });
+                return errorStr
+            }).join("\n");
 
-            console.error(`errorsStr: ${errorsStr}`)
             core.setFailed(errorsStr);
         }
     }
