@@ -12,7 +12,7 @@ https.get(validatorUrl, (res) => {
     data += chunk;
   });
   res.on('end', () => {
-    fs.writeFileSync("validator/validator.js", data);
+    fs.writeFileSync("./validator/validator.js", data);
   })
 }).on('error', err => {
   console.log(err.message);
@@ -25,7 +25,7 @@ https.get(schemaUrl, (res) => {
     data += chunk;
   });
   res.on('end', () => {
-    fs.writeFileSync("schemas/wcs-manifest-schema.json", data);
+    fs.writeFileSync("./schemas/wcs-manifest-schema.json", data);
   })
 }).on('error', err => {
   console.log(err.message);
@@ -52,6 +52,20 @@ exec("npm ci", (error, stdout, stderr) => {
         return;
     }
     console.log(`stdout: ${stdout}`);
+});
+
+fs.readdirSync(".").forEach((e) => console.log(e));
+
+exec(`ls -la`, (error, stdout, stderr) => {
+  if (error) {
+      console.log(`error: ${error.message}`);
+      return;
+  }
+  if (stderr) {
+      console.log(`stderr: ${stderr}`);
+      return;
+  }
+  console.log(`stdout: ${stdout}`);
 });
 
 const home = process.env.HOME;
