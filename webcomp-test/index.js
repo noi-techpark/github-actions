@@ -33,6 +33,7 @@ function originTest(path, keyword, fileExt) {
 }
 
 try {
+    // Origin Test
     const originTestEnabled = core.getBooleanInput("origin-test-enabled");
     const originTestDirectory = core.getInput("origin-test-directory");
     const originTestKeyword = core.getInput("origin-test-keyword");
@@ -51,6 +52,14 @@ try {
         if (!originTest(originTestDirectory, originTestKeyword, originTestFileExt)) {
             core.setFailed("No occurrence of origin found");
         }
+    }
+
+    // Manifest Test
+    if (originTestEnabled) {
+        console.log(`Testing for origin is enabled in directory ${originTestDirectory} with keyword ${originTestKeyword}`);
+        console.log(`Searching in files with extensions: ${originTestFileExt.join(", ")}`);
+    } else {
+        console.log(`Testing for origin is not enabled`);
     }
 
     if (manifestTestEnabled) {
