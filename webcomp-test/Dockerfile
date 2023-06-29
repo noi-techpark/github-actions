@@ -8,7 +8,7 @@ RUN wget "https://webcomponents.opendatahub.com/validator/validator.js" -P /vali
 RUN mkdir /schemas
 RUN wget "https://webcomponents.opendatahub.com/schemas/wcs-manifest-schema.json" -P /schemas
 
-RUN sed "s/import.*from.*\.json'/& assert { type: "json" }/"
+RUN sed -i "s/import.*from.*\.json'/& assert { type: "json" }/" /validator/validator.js
 
 COPY package.json package-lock.json index.js /
 
