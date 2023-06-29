@@ -54,7 +54,13 @@ exec("npm ci", (error, stdout, stderr) => {
     console.log(`stdout: ${stdout}`);
 });
 
-exec("pwd", (error, stdout, stderr) => {
+const home = process.env.HOME;
+const githubWorkspace = process.env.GITHUB_WORKSPACE;
+
+console.log(home);
+console.log(githubWorkspace);
+
+exec(`ls -la ${home}`, (error, stdout, stderr) => {
   if (error) {
       console.log(`error: ${error.message}`);
       return;
@@ -66,7 +72,7 @@ exec("pwd", (error, stdout, stderr) => {
   console.log(`stdout: ${stdout}`);
 });
 
-exec("ls -la", (error, stdout, stderr) => {
+exec(`ls -la ${githubWorkspace}`, (error, stdout, stderr) => {
   if (error) {
       console.log(`error: ${error.message}`);
       return;
