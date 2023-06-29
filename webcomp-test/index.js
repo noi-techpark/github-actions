@@ -71,7 +71,7 @@ try {
                 let errorStr = `${error.path ? error.path : "(ROOT)"}: ${error.text}`;
                 if (error.params) {
                     errorStr += ": ";
-                    errorStr += error.params.join(", ");
+                    errorStr += Object.values(error.params).join(", ");
                 }
                 errorStr += "\n";
             });
