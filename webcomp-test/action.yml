@@ -21,11 +21,12 @@ inputs:
     description: 'File extensions which should be searchd for the origin test keyword'
     required: false
     default: 'js jsx ts tsx vue'
-  # manifest-test-enabled:
-  #   description: 'Enable testing for the existence and validity of a manifest.json file at the projects root'
-  #   required: false
-  #   default: true
+  manifest-test-enabled:
+    description: 'Enable testing for the existence and validity of a manifest.json file at the projects root'
+    required: false
+    default: true
   
 runs:
   using: 'node16'
+  pre: 'setup.js'
   main: 'index.js'

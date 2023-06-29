@@ -4,6 +4,7 @@
 
 import core from "@actions/core";
 import fs from "fs";
+import validate from "validator/validator"
 
 function originTest(path, keyword, fileExt) {
     let entries = fs.readdirSync(path);
@@ -37,6 +38,8 @@ try {
     const originTestKeyword = core.getInput("origin-test-keyword");
     const originTestFileExt = core.getInput("origin-test-file-ext").split(" ");
 
+    const manifestTestEnabled = core.getBooleanInput("origin-test-enabled");
+
     if (originTestEnabled) {
         console.log(`Testing for origin is enabled in directory ${originTestDirectory} with keyword ${originTestKeyword}`);
         console.log(`Searching in files with extensions: ${originTestFileExt.join(", ")}`);
@@ -47,6 +50,24 @@ try {
     if (originTestEnabled) {
         if (!originTest(originTestDirectory, originTestKeyword, originTestFileExt)) {
             core.setFailed("No occurrence of origin found");
+        }
+    }
+
+    if (manifestTestEnabled) {
+        let manifestStr = fs.readFileSync("wcs-manifest.json", "utf-8");
+        let validator = validate(manifestStr);
+        let errors = validator.errors;
+        if (errors) {
+            let errorStr = errors.map((err) => {
+                let err = `${err.path ? err.path : "(ROOT)"}: ${err.text}`;
+                if (err.params) {
+                    err += ": ";
+                    err += err.params.join(", ");
+                }
+                err += "\n";
+            });
+
+            core.setFailed(errorStr);
         }
     }
 } catch (error) {
