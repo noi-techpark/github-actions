@@ -27,6 +27,6 @@ inputs:
     default: true
   
 runs:
-  using: 'node18'
+  using: 'node16'
   pre: 'setup.js'
   main: 'index.js'
