@@ -58,16 +58,16 @@ try {
         let validator = validate(manifestStr);
         let errors = validator.errors;
         if (errors) {
-            let errorStr = errors.map((err) => {
-                let err = `${err.path ? err.path : "(ROOT)"}: ${err.text}`;
-                if (err.params) {
-                    err += ": ";
-                    err += err.params.join(", ");
+            let errorsStr = errors.map((error) => {
+                let errorStr = `${error.path ? error.path : "(ROOT)"}: ${error.text}`;
+                if (error.params) {
+                    errorStr += ": ";
+                    errorStr += error.params.join(", ");
                 }
-                err += "\n";
+                errorStr += "\n";
             });
 
-            core.setFailed(errorStr);
+            core.setFailed(errorsStr);
         }
     }
 } catch (error) {
