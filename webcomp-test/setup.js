@@ -23,7 +23,7 @@ https.get(schemaUrl, (res) => {
     data += chunk;
   });
   res.on('end', () => {
-    fs.writeFileSync("schemas/wcs-manifest-schema.json", schemaStr);
+    fs.writeFileSync("schemas/wcs-manifest-schema.json", data);
   })
 }).on('error', err => {
   console.log(err.message);
