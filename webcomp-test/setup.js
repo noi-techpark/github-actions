@@ -5,6 +5,7 @@ import https from "https";
 const validatorUrl = "https://webcomponents.opendatahub.com/validator/validator.js";
 const schemaUrl = "https://webcomponents.opendatahub.com/schemas/wcs-manifest-schema.json";
 
+console.log("Downloading validator.js");
 https.get(validatorUrl, (res) => {
   let data = '';
   res.on('data', chunk => {
@@ -17,6 +18,7 @@ https.get(validatorUrl, (res) => {
   console.log(err.message);
 })
 
+console.log("Downloading wcs-manifest-schema.json");
 https.get(schemaUrl, (res) => {
   let data = '';
   res.on('data', chunk => {
@@ -39,7 +41,7 @@ https.get(schemaUrl, (res) => {
 // const schemaStr = await schemaRes.text();
 // fs.writeFileSync("schemas/wcs-manifest-schema.json", schemaStr);
 
-console.log("Installing node modules...");
+console.log("Installing node modules");
 exec("npm ci", (error, stdout, stderr) => {
     if (error) {
         console.log(`error: ${error.message}`);
@@ -50,4 +52,16 @@ exec("npm ci", (error, stdout, stderr) => {
         return;
     }
     console.log(`stdout: ${stdout}`);
+});
+
+exec("ls -la", (error, stdout, stderr) => {
+  if (error) {
+      console.log(`error: ${error.message}`);
+      return;
+  }
+  if (stderr) {
+      console.log(`stderr: ${stderr}`);
+      return;
+  }
+  console.log(`stdout: ${stdout}`);
 });

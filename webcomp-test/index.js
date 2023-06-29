@@ -4,7 +4,7 @@
 
 import core from "@actions/core";
 import fs from "fs";
-import validate from "validator/validator"
+import validate from "./validator/validator.js"
 
 function originTest(path, keyword, fileExt) {
     let entries = fs.readdirSync(path);
