@@ -4,3 +4,6 @@
 # Editors
 .idea
 .vscode
+
+# Node
+webcomp-test/node_modules/
