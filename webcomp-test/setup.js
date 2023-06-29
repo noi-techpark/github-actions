@@ -1,5 +1,5 @@
-const { exec } = require("child_process");
-const fs = require("fs");
+import { exec } from "child_process";
+import fs from "fs";
 
 console.log("Downloading validator.js");
 const validatorRes = await fetch("https://webcomponents.opendatahub.com/validator/validator.js");
