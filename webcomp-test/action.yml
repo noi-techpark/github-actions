@@ -27,6 +27,5 @@ inputs:
     default: true
   
 runs:
-  using: 'node16'
-  pre: 'setup.js'
-  main: 'index.js'
+  using: 'docker'
+  image: 'Dockerfile'
