@@ -6,6 +6,32 @@ import core from "@actions/core";
 import fs from "fs";
 import validate from "./validator/validator.js"
 
+function dbg(str) {
+    core.debug(str);
+}
+
+function info(str) {
+    core.info(str);
+}
+
+function warn(str) {
+    core.warn(str);
+}
+
+function error(str) {
+    core.error(str);
+}
+
+let failedTests = [];
+function setFailed(failedTest) {
+    error(`Test failed: ${failedTest}`);
+    failedTests.push(failedTest);
+}
+
+function setSucceeded(succeededTest) {
+    info(`Test succeeded: ${succeededTest}`);
+}
+
 function originTest(path, keyword, fileExt) {
     let entries = fs.readdirSync(path);
 
@@ -17,15 +43,15 @@ function originTest(path, keyword, fileExt) {
         } else {
             const hasValidExt = [...fileExt].map((ext) => entryPath.endsWith(ext)).reduce((prev, current) => prev || current, false)
             if (!hasValidExt) {
-                console.log(`Skipping ${entryPath}`);
+                dbg(`Skipping ${entryPath}`);
                 return false;
             }
 
-            console.log(`Checking ${entryPath}`);
+            dbg(`Checking ${entryPath}`);
             let includesKeyword = fs.readFileSync(entryPath, "utf-8").includes(keyword);
 
             if (includesKeyword)
-                console.log(`Found ${keyword} in ${entryPath}`);
+                info(`Found ${keyword} in ${entryPath}`);
 
             return includesKeyword
         }
@@ -64,15 +90,17 @@ try {
     const originTestFileExt = core.getInput("origin-test-file-ext").split(" ");
 
     if (originTestEnabled) {
-        console.log(`Testing for origin is enabled in directory ${originTestDirectory} with keyword ${originTestKeyword}`);
-        console.log(`Searching in files with extensions: ${originTestFileExt.join(", ")}`);
+        info(`Testing for origin is enabled in directory ${originTestDirectory} with keyword ${originTestKeyword}`);
+        info(`Searching in files with extensions: ${originTestFileExt.join(", ")}`);
     } else {
-        console.log(`Testing for origin is not enabled`);
+        warn(`Testing for origin is not enabled`);
     }
 
     if (originTestEnabled) {
         if (!originTest(originTestDirectory, originTestKeyword, originTestFileExt)) {
-            core.setFailed("No occurrence of origin found");
+            setFailed("Orign Test")
+        } else {
+            setSucceeded("Origin Test")
         }
     }
 
@@ -80,17 +108,18 @@ try {
     const manifestTestEnabled = core.getBooleanInput("origin-test-enabled");
 
     if (manifestTestEnabled) {
-        console.log(`Testing manifest file is enabled`);
+        info(`Testing manifest file is enabled`);
     } else {
-        console.log(`Testing manifest file is not enabled`);
+        warn(`Testing manifest file is not enabled`);
     }
 
     if (manifestTestEnabled) {
         let manifestTestReturn = manifestTest();
         if (manifestTestReturn) {
-            core.setFailed(manifestTestReturn);
+            error(manifestTestReturn)
+            setFailed("Manifest test")
         } else {
-            console.log("Manifest file ok");
+            setSucceeded("Manifest Test")
         }
     }
 
@@ -98,17 +127,22 @@ try {
     const logoTestEnabled = core.getBooleanInput("logo-test-enabled");
 
     if (logoTestEnabled) {
-        console.log(`Testing for logo is enabled`);
+        info(`Testing for logo is enabled`);
     } else {
-        console.log(`Testing for logo is not enabled`);
+        warn(`Testing for logo is not enabled`);
     }
 
     if (logoTestEnabled) {
         if (!logoTest()) {
-            core.setFailed("wcs-logo.png does not exist");
+            error("wcs-logo.png does not exist")
+            setFailed("Logo test");
         } else {
-            console.log("Logo ok");
+            setSucceeded("Logo test");
         }
+    }
+
+    if (failedTests.length > 0) {
+        core.setFailed(`Failed tests:\n${failedTests.join("\n")}`);
     }
 } catch (error) {
     core.setFailed(error.message);
