@@ -63,18 +63,19 @@ function manifestTest() {
     let validator = validate(manifestStr);
     let errors = validator.errors;
     if (errors) {
-        let errorsStr = errors.map((error) => {
+        errors.forEach((error) => {
             let errorStr = `${error.path ? error.path : "(ROOT)"}: ${error.text}`;
             if (error.params) {
                 errorStr += ": ";
                 errorStr += Object.values(error.params).join(", ");
             }
-            return errorStr
-        }).join("\n");
+            
+            error(errorStr);
+        });
 
-        return errorsStr;
+        return false;
     } else {
-        return null;
+        return true;
     }
 }
 
@@ -114,9 +115,7 @@ try {
     }
 
     if (manifestTestEnabled) {
-        let manifestTestReturn = manifestTest();
-        if (manifestTestReturn) {
-            error(manifestTestReturn)
+        if (!manifestTest()) {
             setFailed("Manifest test")
         } else {
             setSucceeded("Manifest Test")
@@ -142,7 +141,7 @@ try {
     }
 
     if (failedTests.length > 0) {
-        core.setFailed(`Failed tests:\n${failedTests.join("\n")}`);
+        core.setFailed(`Failed tests: ${failedTests.join(", ")}`);
     }
 } catch (error) {
     core.setFailed(error.message);
