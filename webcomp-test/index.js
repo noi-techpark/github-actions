@@ -48,7 +48,7 @@ function manifestTest() {
 
         return errorsStr;
     } else {
-        return true;
+        return null;
     }
 }
 
@@ -87,7 +87,7 @@ try {
 
     if (manifestTestEnabled) {
         let manifestTestReturn = manifestTest();
-        if (!manifestTestReturn) {
+        if (manifestTestReturn) {
             core.setFailed(manifestTestReturn);
         } else {
             console.log("Manifest file ok");
@@ -107,7 +107,7 @@ try {
         if (!logoTest()) {
             core.setFailed("wcs-logo.png does not exist");
         } else {
-            console.log("Manifest file ok");
+            console.log("Logo ok");
         }
     }
 } catch (error) {
