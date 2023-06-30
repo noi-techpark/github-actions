@@ -15,7 +15,7 @@ function info(str) {
 }
 
 function warn(str) {
-    core.warn(str);
+    core.warning(str);
 }
 
 function error(str) {
