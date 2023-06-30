@@ -63,14 +63,14 @@ function manifestTest() {
     let validator = validate(manifestStr);
     let errors = validator.errors;
     if (errors) {
-        errors.forEach((error) => {
-            let errorStr = `${error.path ? error.path : "(ROOT)"}: ${error.text}`;
-            if (error.params) {
-                errorStr += ": ";
-                errorStr += Object.values(error.params).join(", ");
+        errors.forEach((err) => {
+            let errStr = `${err.path ? err.path : "(ROOT)"}: ${err.text}`;
+            if (err.params) {
+                errStr += ": ";
+                errStr += Object.values(err.params).join(", ");
             }
             
-            error(errorStr);
+            error(errStr);
         });
 
         return false;
