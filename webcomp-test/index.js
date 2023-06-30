@@ -48,9 +48,12 @@ function manifestTest() {
 
         return errorsStr;
     } else {
-        console.log("Manifest file ok");
         return true;
     }
+}
+
+function logoTest() {
+    return fs.existsSync("wcs-logo.png");
 }
 
 try {
@@ -86,6 +89,25 @@ try {
         let manifestTestReturn = manifestTest();
         if (!manifestTestReturn) {
             core.setFailed(manifestTestReturn);
+        } else {
+            console.log("Manifest file ok");
+        }
+    }
+
+    // Logo Test
+    const logoTestEnabled = core.getBooleanInput("logo-test-enabled");
+
+    if (logoTestEnabled) {
+        console.log(`Testing for logo is enabled`);
+    } else {
+        console.log(`Testing for logo is not enabled`);
+    }
+
+    if (logoTestEnabled) {
+        if (!logoTest()) {
+            core.setFailed("wcs-logo.png does not exist");
+        } else {
+            console.log("Manifest file ok");
         }
     }
 } catch (error) {

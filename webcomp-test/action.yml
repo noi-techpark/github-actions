@@ -25,6 +25,10 @@ inputs:
     description: 'Enable testing for the existence and validity of a manifest.json file at the projects root'
     required: false
     default: true
+  logo-test-enabled:
+    description: 'Enable testing for the existence of a wcs-logo.png file at the projects root'
+    required: false
+    default: true
   
 runs:
   using: 'docker'
