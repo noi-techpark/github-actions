@@ -32,6 +32,27 @@ function originTest(path, keyword, fileExt) {
     }).reduce((prev, current) => prev || current, false);
 }
 
+function manifestTest() {
+    let manifestStr = fs.readFileSync("wcs-manifest.json", "utf-8");
+    let validator = validate(manifestStr);
+    let errors = validator.errors;
+    if (errors) {
+        let errorsStr = errors.map((error) => {
+            let errorStr = `${error.path ? error.path : "(ROOT)"}: ${error.text}`;
+            if (error.params) {
+                errorStr += ": ";
+                errorStr += Object.values(error.params).join(", ");
+            }
+            return errorStr
+        }).join("\n");
+
+        return errorsStr;
+    } else {
+        console.log("Manifest file ok");
+        return true;
+    }
+}
+
 try {
     // Origin Test
     const originTestEnabled = core.getBooleanInput("origin-test-enabled");
@@ -62,22 +83,9 @@ try {
     }
 
     if (manifestTestEnabled) {
-        let manifestStr = fs.readFileSync("wcs-manifest.json", "utf-8");
-        let validator = validate(manifestStr);
-        let errors = validator.errors;
-        if (errors) {
-            let errorsStr = errors.map((error) => {
-                let errorStr = `${error.path ? error.path : "(ROOT)"}: ${error.text}`;
-                if (error.params) {
-                    errorStr += ": ";
-                    errorStr += Object.values(error.params).join(", ");
-                }
-                return errorStr
-            }).join("\n");
-
-            core.setFailed(errorsStr);
-        } else {
-            console.log("Manifest file ok");
+        let manifestTestReturn = manifestTest();
+        if (!manifestTestReturn) {
+            core.setFailed(manifestTestReturn);
         }
     }
 } catch (error) {
