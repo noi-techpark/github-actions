@@ -32,32 +32,35 @@ inputs:
 runs:
   using: "composite"
   steps:
+    
     - name: Setup SSH connection
+      shell: bash
       if: ${{ inputs.ssh-setup == 'true' }}
       env:
         SSH_AUTH_SOCK: /tmp/ssh_agent.sock
       run: |
         ssh-agent -a $SSH_AUTH_SOCK > /dev/null
         ssh-add - <<< "${{ inputs.ssh-private-key }}"
-      shell: bash
+    
     - name: Deployment
+      shell: bash
       env:
         SSH_AUTH_SOCK: /tmp/ssh_agent.sock
       working-directory: ${{ inputs.working-directory }}
       run: |
           ssh -o StrictHostKeyChecking=no www-data@${{ inputs.ssh-host }} " \
-                        set -xeo pipefail
-                        cd ${{ inputs.install-path }}
-                        cp var/config/website-settings.php ../website-settings.php
-                        git checkout ${{ inputs.branch }}
-                        git fetch --all --prune
-                        git reset --hard origin/${{ inputs.branch }}
-                        git pull
-                        sed -ie 's/\\(\\"domain\\" => \\)\\([^,]*\\)/\\1\\"${{ inputs.domain }}\\"/' var/config/system.php
-                        sed -ie 's/\\(\\"redirect_to_maindomain\\" => \\)\\([^,]*\\)/\\1FALSE/' var/config/system.php
-                        rm -rf var/cache/*
-                        chmod +x ./bin/console
-                        cp -f ../website-settings.php var/config/website-settings.php
-                        ./bin/console c:c -e dev
-                        ./bin/console c:c -e prod
-      shell: bash
+              set -xeo pipefail
+              cd ${{ inputs.install-path }}
+              cp var/config/website-settings.php ../website-settings.php
+              git checkout ${{ inputs.branch }}
+              git fetch --all --prune
+              git reset --hard origin/${{ inputs.branch }}
+              git pull
+              sed -ie 's/\\(\\"domain\\" => \\)\\([^,]*\\)/\\1\\"${{ inputs.domain }}\\"/' var/config/system.php
+              sed -ie 's/\\(\\"redirect_to_maindomain\\" => \\)\\([^,]*\\)/\\1FALSE/' var/config/system.php
+              rm -rf var/cache/*
+              chmod +x ./bin/console
+              cp -f ../website-settings.php var/config/website-settings.php
+              ./bin/console c:c -e dev
+              ./bin/console c:c -e prod
+          "
