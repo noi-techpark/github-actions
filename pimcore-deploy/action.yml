@@ -56,8 +56,8 @@ runs:
               git fetch --all --prune
               git reset --hard origin/${{ inputs.branch }}
               git pull
-              sed -ie 's/\\(\\"domain\\" => \\)\\([^,]*\\)/\\1\\"${{ inputs.domain }}\\"/' var/config/system.php
-              sed -ie 's/\\(\\"redirect_to_maindomain\\" => \\)\\([^,]*\\)/\\1FALSE/' var/config/system.php
+              sed -ie 's/("domain" => )([^,]*)/1"${{ inputs.domain }}"/' var/config/system.php
+              sed -ie 's/("redirect_to_maindomain" => )([^,]*)/1FALSE/' var/config/system.php
               rm -rf var/cache/*
               chmod +x ./bin/console
               cp -f ../website-settings.php var/config/website-settings.php
