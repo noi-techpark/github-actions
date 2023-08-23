@@ -42,13 +42,13 @@ runs:
         SSH_AUTH_SOCK: /tmp/ssh_agent.sock
       working-directory: ${{ inputs.working-directory }}
       run: |
-          ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null www-data@${{ inputs.ssh-host }} " \
+          ssh -o StrictHostKeyChecking=no www-data@${{ inputs.ssh-host }} " \
                         set -xeo pipefail
                         cd ${{ inputs.install-path }}
                         cp var/config/website-settings.php ../website-settings.php
-                        git checkout ${GITHUB_REF##*/}
+                        git checkout ${{ github.ref_name }}
                         git fetch --all --prune
-                        git reset --hard origin/${GITHUB_REF##*/}
+                        git reset --hard origin/${{ github.ref_name }}
                         git pull
                         sed -ie 's/\\(\\"domain\\" => \\)\\([^,]*\\)/\\1\\"${{ inputs.domain }}\\"/' var/config/system.php
                         sed -ie 's/\\(\\"redirect_to_maindomain\\" => \\)\\([^,]*\\)/\\1FALSE/' var/config/system.php
