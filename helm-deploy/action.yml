@@ -43,7 +43,7 @@ runs:
 
     - name: Authenticate to AWS EKS
       shell: bash
-      run: aws eks --region ${{ inputs.region }} update-kubeconfig --name ${{ inputs.aws-eks-cluster-name }}
+      run: aws eks --region ${{ inputs.aws-region }} update-kubeconfig --name ${{ inputs.aws-eks-cluster-name }}
 
     - name: Helm deployment
       shell: bash
