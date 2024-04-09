@@ -6,9 +6,6 @@ name: 'Helm deployment'
 description: 'Deploys a helm chart on AWS EKS'
 
 inputs:
-  working-directory:
-    description: 'The working directory'
-    default: '.'
   k8s-name:
     description: 'The deployment name in the Kubernetes cluster'
     required: true
@@ -50,8 +47,7 @@ runs:
 
     - name: Helm deployment
       shell: bash
-      working-directory: ${{ inputs.working-directory}}
       run: |
-          helm upgrade --install ${{ inputs.deployment-name }} ${{ inputs.template-path }} \
+          helm upgrade --install ${{ inputs.k8s-name }} ${{ inputs.chart-path }} \
               --values ${{ inputs.values-file }} \
               --namespace ${{ inputs.k8s-namespace }}
