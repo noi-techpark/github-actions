@@ -3,35 +3,36 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 name: 'Helm deployment'
+description: 'Deploys a helm chart on AWS EKS'
 
 inputs:
   working-directory:
     description: 'The working directory'
-    required: false
     default: '.'
-  pod-name:
-    description: 'The pod name in the Kubernetes Cluster'
+  k8s-name:
+    description: 'The deployment name in the Kubernetes cluster'
     required: true
-  values-path:
+  k8s-namespace:
+    description: 'Namespace the chart is deployed to'
+    required: true
+  chart-path:
+    description: 'Location of the helm template directory'
+    required: true
+  values-file:
     description: 'Helm values file path'
-    required: true
     default: 'infrastructure/helm/values.yaml'
-  template-path:
-    description: 'Location of the helm templates values directory'
-    required: true
-  aws-eks-cluster-name:
-    description: 'Name fo the Cluster'
-    required: true
-    default: 'values.yml'
   aws-access-key-id:
     description: 'The AWS access key ID'
     required: true
   aws-secret-access-key:
     description: 'The AWS secret access key'
     required: true
+  aws-eks-cluster-name:
+    description: 'Name of the eks cluster'
+    default: aws-main-eu-01
   aws-region:
     description: 'The AWS region'
-    required: true
+    default: eu-west-1
 
 runs:
   using: "composite"
@@ -51,5 +52,6 @@ runs:
       shell: bash
       working-directory: ${{ inputs.working-directory}}
       run: |
-        RELEASETIME=`date +%s`
-        helm upgrade --install ${{ inputs.pod-name }} ${{ inputs.template-path }} --values ${{ inputs.values-path}} --set-string podAnnotations.releaseTime=$RELEASETIME
+          helm upgrade --install ${{ inputs.deployment-name }} ${{ inputs.template-path }} \
+              --values ${{ inputs.values-file }} \
+              --namespace ${{ inputs.k8s-namespace }}
