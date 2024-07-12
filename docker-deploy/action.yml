@@ -16,7 +16,7 @@ inputs:
   requirements-file:
     description: 'The Ansible requirements filename'
     required: false
-    default: '${{ github.action_path }}/requirements.yml'
+    default: '$GITHUB_ACTION_PATH/requirements.yml'
   hosts:
     description: 'The hosts where the deployment should be applied'
     required: true
