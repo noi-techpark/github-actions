@@ -6,6 +6,7 @@ import os
 import shutil
 
 env_keys = list(dict(os.environ).keys())
+env_keys.sort()
 
 prefix = str(os.environ.get("INPUT_ENVIRONMENT-VARIABLE-PREFIX", "X_"))
 output = ""
