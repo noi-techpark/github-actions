@@ -99,7 +99,7 @@ try {
 
     if (originTestEnabled) {
         if (!originTest(originTestDirectory, originTestKeyword, originTestFileExt)) {
-            setFailed("Orign Test")
+            setFailed("Origin Test")
         } else {
             setSucceeded("Origin Test")
         }
