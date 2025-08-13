@@ -1,0 +1,10 @@
+version = 1
+SPDX-PackageName = "github-actions"
+SPDX-PackageSupplier = "NOI Techpark <digital@noi.bz.it>"
+SPDX-PackageDownloadLocation = "https://github.com/noi-techpark/github-actions"
+
+[[annotations]]
+path = [".gitignore", "env-file/.env", "**/Dockerfile", "webcomp-push/Dockerfile", "webcomp-test/node_modules/**", "webcomp-test/**.json", "**/.yml"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "(c) NOI Techpark <digital@noi.bz.it>"
+SPDX-License-Identifier = "CC0-1.0"
