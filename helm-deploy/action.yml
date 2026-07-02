@@ -12,6 +12,10 @@ inputs:
   k8s-namespace:
     description: 'Namespace the chart is deployed to'
     required: true
+  helm-history-max:
+    description: 'Maximum number of Helm release revisions to retain'
+    default: '5'
+    required: false
   chart-path:
     description: 'Location of the helm template directory'
     required: true
@@ -50,4 +54,6 @@ runs:
       run: |
           helm upgrade --install ${{ inputs.k8s-name }} ${{ inputs.chart-path }} \
               --values ${{ inputs.values-file }} \
-              --namespace ${{ inputs.k8s-namespace }}
+              --namespace ${{ inputs.k8s-namespace }} \
+              --history-max ${{ inputs.helm-history-max }} 
+
