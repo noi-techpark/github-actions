@@ -30,6 +30,15 @@ inputs:
   aws-region:
     description: 'The AWS region'
     default: eu-west-1
+  wait:
+    description: 'Wait for all release resources to become ready before returning (helm --wait), i.e. block until the rollout has completed. Set to "false" for the previous fire-and-forget behaviour.'
+    default: 'true'
+  timeout:
+    description: 'Timeout for --wait as a Go/helm duration (e.g. 300s, 5m).'
+    default: '5m'
+  atomic:
+    description: 'Roll back the release if the upgrade fails (helm --atomic; implies --wait).'
+    default: 'false'
 
 runs:
   using: "composite"
@@ -47,7 +56,15 @@ runs:
 
     - name: Helm deployment
       shell: bash
+      env:
+        WAIT: ${{ inputs.wait }}
+        TIMEOUT: ${{ inputs.timeout }}
+        ATOMIC: ${{ inputs.atomic }}
       run: |
-          helm upgrade --install ${{ inputs.k8s-name }} ${{ inputs.chart-path }} \
-              --values ${{ inputs.values-file }} \
-              --namespace ${{ inputs.k8s-namespace }}
+          flags=()
+          if [ "$WAIT" = "true" ]; then flags+=(--wait --timeout "$TIMEOUT"); fi
+          if [ "$ATOMIC" = "true" ]; then flags+=(--atomic); fi
+          helm upgrade --install "${{ inputs.k8s-name }}" "${{ inputs.chart-path }}" \
+              --values "${{ inputs.values-file }}" \
+              --namespace "${{ inputs.k8s-namespace }}" \
+              "${flags[@]}"
