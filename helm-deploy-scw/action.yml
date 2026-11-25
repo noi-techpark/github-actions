@@ -1,0 +1,90 @@
+# SPDX-FileCopyrightText: NOI Techpark <digital@noi.bz.it>
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+name: 'Helm deployment (Scaleway)'
+description: 'Deploys a helm chart on Scaleway Kapsule'
+
+inputs:
+  k8s-name:
+    description: 'The deployment name in the Kubernetes cluster'
+    required: true
+  k8s-namespace:
+    description: 'Namespace the chart is deployed to'
+    required: true
+  chart-path:
+    description: 'Location of the helm template directory'
+    required: true
+  values-file:
+    description: 'Helm values file path. Several files can be given, one per line; later files override earlier ones.'
+    default: 'infrastructure/helm/values.yaml'
+  scw-access-key:
+    description: 'The Scaleway access key ID'
+    required: true
+  scw-secret-key:
+    description: 'The Scaleway secret key'
+    required: true
+  scw-cluster-id:
+    description: 'ID of the Kapsule cluster'
+    default: 144c40cb-6737-484e-be30-a2e8b8a49181
+  scw-region:
+    description: 'The Scaleway region of the cluster'
+    default: fr-par
+  scw-organization-id:
+    description: 'The Scaleway organization ID'
+    default: d0d90a7d-5b86-4b8a-b271-36ecb405fb9d
+  scw-project-id:
+    description: 'The Scaleway project ID'
+    default: af92482c-17f4-4d6c-b435-bb6695dde286
+  scw-cli-version:
+    description: 'Version of the Scaleway CLI used to fetch the kubeconfig'
+    default: '2.65.1'
+  wait:
+    description: 'Wait for all release resources to become ready before returning (helm --wait), i.e. block until the rollout has completed.'
+    default: 'true'
+  timeout:
+    description: 'Timeout for --wait as a Go/helm duration (e.g. 300s, 5m).'
+    default: '5m'
+  atomic:
+    description: 'Roll back the release if the upgrade fails (helm --atomic; implies --wait).'
+    default: 'false'
+
+runs:
+  using: "composite"
+  steps:
+    - name: Install Scaleway CLI
+      shell: bash
+      env:
+        SCW_CLI_VERSION: ${{ inputs.scw-cli-version }}
+      run: |
+        curl -fsSL -o "$RUNNER_TEMP/scw" "https://github.com/scaleway/scaleway-cli/releases/download/v${SCW_CLI_VERSION}/scaleway-cli_${SCW_CLI_VERSION}_linux_amd64"
+        sudo install -m 0755 "$RUNNER_TEMP/scw" /usr/local/bin/scw
+
+    - name: Authenticate to Scaleway Kapsule
+      shell: bash
+      env:
+        SCW_ACCESS_KEY: ${{ inputs.scw-access-key }}
+        SCW_SECRET_KEY: ${{ inputs.scw-secret-key }}
+        SCW_DEFAULT_REGION: ${{ inputs.scw-region }}
+        SCW_DEFAULT_ORGANIZATION_ID: ${{ inputs.scw-organization-id }}
+        SCW_DEFAULT_PROJECT_ID: ${{ inputs.scw-project-id }}
+        SCW_CLUSTER_ID: ${{ inputs.scw-cluster-id }}
+      run: scw k8s kubeconfig install "$SCW_CLUSTER_ID" region="$SCW_DEFAULT_REGION"
+
+    - name: Helm deployment
+      shell: bash
+      env:
+        VALUES_FILES: ${{ inputs.values-file }}
+        WAIT: ${{ inputs.wait }}
+        TIMEOUT: ${{ inputs.timeout }}
+        ATOMIC: ${{ inputs.atomic }}
+      run: |
+          flags=()
+          while IFS= read -r f; do
+            [ -n "$f" ] && flags+=(--values "$f")
+          done <<< "$VALUES_FILES"
+          if [ "$WAIT" = "true" ]; then flags+=(--wait --timeout "$TIMEOUT"); fi
+          if [ "$ATOMIC" = "true" ]; then flags+=(--atomic); fi
+          helm upgrade --install "${{ inputs.k8s-name }}" "${{ inputs.chart-path }}" \
+              --namespace "${{ inputs.k8s-namespace }}" \
+              "${flags[@]}"
