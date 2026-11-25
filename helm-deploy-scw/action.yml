@@ -38,7 +38,7 @@ inputs:
     default: af92482c-17f4-4d6c-b435-bb6695dde286
   scw-cli-version:
     description: 'Version of the Scaleway CLI used to fetch the kubeconfig'
-    default: '2.65.1'
+    default: '2.67.0'
   wait:
     description: 'Wait for all release resources to become ready before returning (helm --wait), i.e. block until the rollout has completed.'
     default: 'true'
